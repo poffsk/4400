@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="../js/modules/myapp.js"></script>
+  <script src="../js/controllers/createbldgctrl.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="createbldgCtrl">
+      <h1>Create Building</h1>
+
+
+      <!-- big table goes here -->
+      <p>
+        <label>Name</label>
+        <input ng-model="i_buildingName" type="text" id="myText" placeholder="text here" />
+      </p>
+      <p>
+        <label>Description</label>
+        <input ng-model="i_description" type="text" id="myText" placeholder="Description for Building" />
+      </p>
+      <div class="row">
+        <div class="col">
+          <h5>Tags</h5>
+          <div class="alert alert-danger" ng-show="dupTagMsgFlag">
+            <strong>ERROR:</strong> Duplicate Tag!
+          </div>
+          <table>
+            <tr ng-repeat="tag in tagList">
+              <td>{{tag}}</td>
+              <td><button type="button" class="btn btn-primary">
+                  <i class="fa fa-plus"></i>
+                </button></td>
+              <td><button type="button" class="btn btn-primary" ng-click="removeTag(tag)">
+                  <i class="fa fa-minus"></i>
+                </button></td>
+            </tr>
+            <tr>
+              <td><input type="text" ng-model="newTag" /></td>
+              <td><button type="button" class="btn btn-primary" ng-click="addTag()">
+                  <i class="fa fa-plus"></i>
+                </button></td>
+              <td></td>
+            </tr>
+          </table>
+          <div class="row">
+            <div class="col">
+              <button class="btn btn-primary" ng-click=goScreen4()>Back</button>
+              <button class="btn btn-primary" ng-click=createData()>Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{mytest}}
+      <button ng-click="getDisBitchSumData()">Best Button</button>
+    </div>
+</body>
+
+</html>

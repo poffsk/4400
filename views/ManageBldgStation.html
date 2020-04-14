@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="../js/modules/myapp.js"></script>
+  <script src="../js/controllers/managebldgstationctrl.js"></script>
+</head>
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="manageBldgStationCtrl">
+      <h1>Manage Building and Station</h1>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">Building Name
+            <select ng-model="i_buildingName">
+              <option></option>
+              <option ng-repeat="currShit in shit">{{currShit}}</option>
+            </select>
+            {{i_buildingName}}
+            <!--  <input type = "text"
+                     id = "myText"
+                     value = "text here" ng-model="i_buildingName"/> -->
+          </div>
+          <div class="col">Building Tag (contain)
+            <input type="text" id="myText" ng-model="i_buildingTag" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">Station Name
+            <select ng-model="i_stationName">
+              <option></option>
+              <option ng-repeat="currShit in shit2">{{currShit}}</option>
+            </select>
+            {{i_stationName}}
+            {{i_stationNameY}}
+            <!-- ng-model? -->
+          </div>
+          <div class="col">Capacity
+            <input type="number" id="quantity" min=0 ng-model="i_minCapacity" />
+            <input type="number" id="quantity" min=0 ng-model="i_maxCapacity" />
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" ng-click="doProcedure()">Filter</button>
+        </div>
+        <form>
+          <table class="table table-striped table-hover">
+            <tr>
+              <th></th>
+              <th>Building</th>
+              <th>Tag(s)</th>
+              <th>Station</th>
+              <th>Capacity</th>
+              <th>Food Truck(s)</th>
+            </tr>
+            <tr ng-repeat="row in tableResult">
+              <td>
+                <div class="radio">
+                  <label class="radio-inline"><input type="radio" ng-model="$parent.selectedRow" value="{{$index}}" ng-value="$index" name="optradio"></label>
+                </div>
+              </td>
+              <td>{{row.buildingName}}</td>
+              <td>{{row.tags}}</td>
+              <td>{{row.stationName}}</td>
+              <td>{{row.capacity}}</td>
+              <td>{{row.foodTruckNames}}</td>
+            </tr>
+          </table>
+        </form>
+        <div class="row">
+          <button class="btn btn-primary" ng-click="goHome()">Back</button>
+          <button class="btn btn-primary" ng-click="goCreateBldg()">Create Building</button>
+          <button class="btn btn-primary" ng-click="updateBuilding()">Update Building</button>
+          <button class="btn btn-primary">Delete Building</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" ng-click="goCreateStat()">Create Station</button>
+          <button class="btn btn-primary" ng-click="updateStation()">Update Station</button>
+          <button class="btn btn-primary">Delete Station</button>
+        </div>
+
+        <!--  {{mytest}} -->
+        <button ng-click="doQuery()">Best Button</button>
+      </div>
+    </div>
+</body>
+
+</html>
+
+<!-- query = select * from ad_filter_building_station_result
+call ad_filter_building_station (i_buildingName, i_buildingTag, i_stationName, i_minCapacity, i_maxCapacity);
+CREATE PROCEDURE ad_filter_building_station(
+				IN i_buildingName VARCHAR(50),
+				IN i_buildingTag VARCHAR(50),
+        IN i_stationName VARCHAR(50),
+        IN i_minCapacity INT,
+        IN i_maxCapacity INT)
+
+	INSERT INTO ad_filter_building_station_result -->

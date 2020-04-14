@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="../js/modules/myapp.js"></script>
+  <script src="../js/controllers/updatefoodtruckctrl.js"></script>
+</head>
+    <body>
+      <div ng-app="myApp">
+        <div class="container-fluid" ng-controller="updatefoodtruckctrl">
+      <h1>Update Food Truck</h1>
+
+
+<!-- big table goes here -->
+<fieldset>
+  <p>
+    <label>Name</label>
+    <input type = "text"
+           id = "myText"
+           value = "text here" />
+  </p>
+  <p>
+    <label>Station</label>
+    <select id="cars">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+<option value="mercedes">Mercedes</option>
+<option value="audi">Audi</option>
+</select>
+  </p>
+  <p>
+    <label>Assigned Staff<label>
+    <select id="cars">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+<option value="mercedes">Mercedes</option>
+<option value="audi">Audi</option>
+</select>
+  </p>
+
+  MENUITEMS Food Apple Price so much population fuck
+
+<!-- somehow gotta insert fucking menu Item options here WITH BUTTONS -->
+
+          <div class="row">
+          <button class="btn btn-primary">Back</button>
+          <button class="btn btn-primary">Create</button>
+</fieldset>
+          </div>
+
+          {{mytest}}
+          <button ng-click="getDisBitchSumData()">Best Button</button>
+        </div>
+    </body>
+</html>

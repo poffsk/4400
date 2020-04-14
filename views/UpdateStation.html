@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="../js/modules/myapp.js"></script>
+  <script src="../js/controllers/updatestationctrl.js"></script>
+</head>
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="updateStationCtrl">
+      <h1>Update Station</h1>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">Name
+            <input ng-model="stationName" type="text" id="myText" value="text here" disabled/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">Capacity
+            <input ng-model="stationCapacity" type="text" id="myText" value="text here"/>
+          </div>
+            <div class="col">Sponsored Building
+              <select ng-model="statBuilding">
+                <option ng-repeat="sponsorName in buildList">{{sponsorName}}</option>
+              </select>
+              {{statBuilding}}
+              <!--  <input type = "text"
+                       id = "myText"
+                       value = "text here" ng-model="i_buildingName"/> -->
+            </div>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" ng-click="goScreen4()">Back</button>
+          <button class="btn btn-primary">Create</button>
+        </div>
+
+        <!-- big table goes here -->
+
+        {{mytest}}
+        <button ng-click="getDisBitchSumData()">Best Button</button>
+      </div>
+    </div>
+</body>
+
+</html>

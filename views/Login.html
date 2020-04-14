@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="../js/modules/myapp.js"></script>
+  <script src="../js/controllers/loginctrl.js"></script>
+</head>
+    <body>
+      <div align="center" class="container-fluid">
+        <div ng-app="myApp">
+          <div class="container-fluid" ng-controller="loginCtrl">
+            {{mytest}}
+        <h1>GT Food Truck</h1>
+        <form>
+          <fieldset>
+            <p>
+              <label>Username</label>
+              <input type = "text"
+                     id = "myText"
+                     placeholder= "text here" ng-model="i_username"/>
+            </p>
+            <p>
+              <label>Password</label>
+              <input type = "password"
+                      id = "myPwd"
+                      placeholder="secret" ng-model="i_password"/>
+            </p>
+            <button class="btn btn-primary" ng-click="doCall()">Login</button>
+            <button class="btn btn-primary" ng-click="goRegister()">Register</button>
+            {{otherPoop}}
+
+          </fieldset>
+        </form>
+      </div>
+    </body>
+</html>

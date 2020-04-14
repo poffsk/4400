@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+  <script src="../js/modules/myapp.js"></script>
+  <script src="../js/controllers/explorectrl.js"></script>
+</head>
+    <body>
+      <div ng-app="myApp">
+        <div class="container-fluid" ng-controller="explorectrl">
+      <h1>Explore</h1>
+
+       <div class="container-fluid">
+          <div class="row">
+            <div class="col">Building Name
+              <select id="cars">
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+        </select>
+            <!--  <input type = "text"
+                     id = "myText"
+                     value = "text here" ng-model="i_buildingName"/> -->
+            </div>
+            <div class="col">Station Name<select id="cars">
+                      <option value="volvo">Volvo</option>
+                      <option value="saab">Saab</option>
+                      <option value="mercedes">Mercedes</option>
+                      <option value="audi">Audi</option>
+                    </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">Building Tag (contain)
+            <input type = "text"
+                   id = "myText"
+                   value = "text here" />
+            </div>
+            <div class = "col">Food Truck Name (contain)
+              <input type = "text"
+                     id = "myText"
+                     value = "text here" />
+            </div>
+          </div>
+          </div>
+          <div class="row">
+            Food (contain)
+            <input type = "text"
+                   id = "myText"
+                   value = "text here" />
+          </div>
+
+          <div class="row">
+          <button class="btn btn-primary" >Filter</button>
+          </div>
+
+
+<!-- big ass table here -->
+
+          <div class="row">
+          <button class="btn btn-primary"  ng-click="goHome()">Back</button>
+          <button class="btn btn-primary">Set As Current Location</button>
+          </div>
+
+          {{mytest}}
+          <button ng-click="getDisBitchSumData()">Best Button</button>
+        </div>
+      </div>
+    </body>
+</html>
