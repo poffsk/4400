@@ -25,6 +25,7 @@
       <p>
         <label>Name</label>
         <input ng-model="buildingName" type="text" id="myText" value="text here" />
+        
       </p>
       <p>
         <label>Description</label>
@@ -55,7 +56,7 @@
 
       <div class="row">
         <button class="btn btn-primary" ng-click="goScreen4()">Back</button>
-        <button class="btn btn-primary">Update</button>
+        <button class="btn btn-primary" ng-click="updateBuilding()">Update</button>
       </div>
 
       {{mytest}}

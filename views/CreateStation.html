@@ -20,30 +20,23 @@
        <div class="container-fluid">
           <div class="row">
             <div class="col">Name
-              <input type = "text"
-                     id = "myText"
-                     value = "text here" />
+              <input ng-model="stationName" type="text" placeholder="text here"/>
             </div>
           </div>
 
           <div class="row">
             <div class="col">Capacity
-              <input type = "text"
-                     id = "myText"
-                     value = "text here" />
+              <input ng-model="i_Capacity" type="text" placeholder="text here"/>
             </div>
             <div class="col">Sponsored Building
-              <select id="cars">
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-        </select>
+              <select ng-model="statBuilding">
+                <option ng-repeat="sponsorName in buildList">{{sponsorName}}</option>
+              </select>
             </div>
           </div>
           <div class="row">
           <button class="btn btn-primary" ng-click="goScreen4cs()">Back</button>
-          <button class="btn btn-primary">Create</button>
+          <button class="btn btn-primary" ng-click="createStation()">Create</button>
           </div>
 
 <!-- big table goes here -->

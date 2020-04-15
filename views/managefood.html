@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Bootstrap Example</title>
+  <title>Manage Food</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -12,40 +13,59 @@
   <script src="../js/modules/myapp.js"></script>
   <script src="../js/controllers/managefoodctrl.js"></script>
 </head>
-    <body>
-      <div ng-app="myApp">
-        <div class="container-fluid" ng-controller="managefoodctrl">
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="manageFoodCtrl">
       <h1>Manage Food</h1>
 
-       <div class="container-fluid">
-          <div class="row">
-            <div class="col">Name
-              <select id="cars">
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
-              </select>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">Name
+            <select ng-model="i_foodName">
+              {{i_foodName}}
+              <option ng-repeat="food in foodList">{{food}}</option>
+            </select>
             <!--  <input type = "text"
                      id = "myText"
                      value = "text here" ng-model="i_buildingName"/> -->
-            </div>
-            <div class="col"><button class="btn btn-primary">Filter</button>
-
-<!-- big ass table -->
-
-            </div>
           </div>
+          <div class="col"><button class="btn btn-primary" ng-click=doCall()>Filter</button>
+            <!-- big ass table -->
+            <form>
+              <table class="table table-striped table-hover">
+                <tr>
+                  <th></th>
+                  <th><button class="btn btn-primary" ng-click="doSort('foodName')">Name</button></th>
+                  <th><button class="btn btn-primary" ng-click="doSort('menuCount')">Menu Count</button></th>
+                  <th><button class="btn btn-primary" ng-click="doSort('purchaseCount')">Purchase Count</button></th>
+                </tr>
+                <tr ng-repeat="row in tableResult">
+                  <td>
+                    <div class="radio">
+                      <label class="radio-inline"><input type="radio" ng-model="$parent.selectedRow" value="{{$index}}" ng-value="$index" name="optradio"></label>
+                    </div>
+                  </td>
+                  <td>{{row.foodName}}</td>
+                  <td>{{row.menuCount}}</td>
+                  <td>{{row.purchaseCount}}</td>
+                </tr>
+              </table>
+            </form>
 
-          <div class="row">
-          <button class="btn btn-primary">Back</button>
-          <button class="btn btn-primary">Delete</button>
-          <button class="btn btn-primary">Create</button>
           </div>
-
-          {{mytest}}
-          <button ng-click="getDisBitchSumData()">Best Button</button>
         </div>
+
+        <div class="row">
+          <button class="btn btn-primary" ng-click="goHome()">Back</button>
+          <button class="btn btn-primary" ng-click="deleteFood()">Delete</button>
+          <button class="btn btn-primary" ng-click="goCreateFood()">Create</button>
+        </div>
+
+        {{mytest}}
+        <button ng-click="getDisBitchSumData()">Best Button</button>
       </div>
-    </body>
+    </div>
+</body>
+
 </html>

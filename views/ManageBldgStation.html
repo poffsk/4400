@@ -80,12 +80,17 @@
           <button class="btn btn-primary" ng-click="goHome()">Back</button>
           <button class="btn btn-primary" ng-click="goCreateBldg()">Create Building</button>
           <button class="btn btn-primary" ng-click="updateBuilding()">Update Building</button>
-          <button class="btn btn-primary">Delete Building</button>
+          <button class="btn btn-primary" ng-click="deleteBuilding()">Delete Building</button>
         </div>
         <div class="row">
           <button class="btn btn-primary" ng-click="goCreateStat()">Create Station</button>
           <button class="btn btn-primary" ng-click="updateStation()">Update Station</button>
-          <button class="btn btn-primary">Delete Station</button>
+          <button class="btn btn-primary" ng-click="deleteStation()">Delete Station</button>
+        </div>
+        <div class="row">
+          <div class="alert alert-danger" ng-show="noStatMsgFlag">
+            <strong>ERROR:</strong> Null Station!
+          </div>
         </div>
 
         <!--  {{mytest}} -->

@@ -1,9 +1,9 @@
 myApp.controller("manageBldgStationCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
+  $scope.noStatMsgFlag = false;
   /*$scope.bldgDropDown = rows;
   $scope.$apply($scope.mytest);*/
-  $scope.shit3 = ["help", "I", "have", "to", "shit!"];
 
   $scope.goHome = function() {
     window.location.href = 'Home.html';
@@ -30,14 +30,6 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
   var search = new URLSearchParams(url.search);
   console.log(search.get("station"));
   $scope.stationName = search.get("station");
-
-  $scope.doCall = function() {
-    conn.getRows($scope.doQuery, 'CALL ad_view_station("' + $scope.stationName + '")')
-  }
-
-  $scope.doQuery = function() {
-    conn.getRows(handleData, 'select * from ad_view_station_result')
-  }
 
 
   $scope.doQuery = function() {
@@ -78,8 +70,27 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
     $scope.$apply($scope.mytest2);
   }
 
+
+
   $scope.updateStation = function() {
-    window.location.href = 'updateStation.html';
+    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+      console.log($scope.selectedRow);
+      console.log($scope.tableResult[$scope.selectedRow]);
+      var currRow = $scope.tableResult[$scope.selectedRow];
+      console.log(currRow.stationName);
+      if (currRow.stationName != null && currRow.stationName.length > 0) {
+        conn.getRows($scope.doQuery3, 'CALL ad_filter_building_station(' + currRow.stationName + ')');
+        window.location.href = 'updateStation.html?stationName=' + currRow.stationName;
+      } else {
+        $scope.noStatMsgFlag = true;
+      }
+
+    }
+  }
+
+  $scope.doQuery3 = function() {
+    console.log('select * from ad_filter_building_station_result');
+    conn.getRows(handleTableData, 'select * from ad_filter_building_station_result');
   }
 
   $scope.updateBuilding = function() {
@@ -87,8 +98,32 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
-      window.location.href = 'updatebldg.html?building=' + currRow.buildingName + "&poop=" + "shit!";
+      window.location.href = 'updatebldg.html?building=' + currRow.buildingName + "&stationName=" + currRow.stationName;
     }
+  }
+
+  $scope.deleteBuilding = function() {
+    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+      console.log($scope.selectedRow);
+      console.log($scope.tableResult[$scope.selectedRow]);
+      var currRow = $scope.tableResult[$scope.selectedRow];
+      conn.getRows($scope.doProcedure(),'call ad_delete_building("' + currRow.buildingName + '")')
+      }
+  }
+
+  function handleNullData(rows){
+  }
+
+  $scope.deleteStation = function() {
+    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+      console.log($scope.selectedRow);
+      console.log($scope.tableResult[$scope.selectedRow]);
+      var currRow = $scope.tableResult[$scope.selectedRow];
+      conn.getRows($scope.doProcedure(),'call ad_delete_station("' + currRow.stationName + '")')
+      }
+  }
+
+  function handleNullData(rows){
   }
 
   $scope.doProcedure = function() {

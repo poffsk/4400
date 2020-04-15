@@ -28,13 +28,15 @@
 
         <div class="row">
           <div class="col">Capacity
-            <input ng-model="stationCapacity" type="text" id="myText" value="text here"/>
+            <input ng-model="statCapacity" type="text" id="myText" value="text here"/>
           </div>
             <div class="col">Sponsored Building
+              <*-- TO DO: make sure current sponsor is on drop-down list -->
               <select ng-model="statBuilding">
                 <option ng-repeat="sponsorName in buildList">{{sponsorName}}</option>
               </select>
-              {{statBuilding}}
+              {{stationName}}
+              {{statCapacity}}
               <!--  <input type = "text"
                        id = "myText"
                        value = "text here" ng-model="i_buildingName"/> -->
@@ -42,12 +44,10 @@
         </div>
         <div class="row">
           <button class="btn btn-primary" ng-click="goScreen4()">Back</button>
-          <button class="btn btn-primary">Create</button>
+          <button class="btn btn-primary" ng-click="updateStation()">Update</button>
         </div>
 
         <!-- big table goes here -->
-
-        {{mytest}}
         <button ng-click="getDisBitchSumData()">Best Button</button>
       </div>
     </div>
