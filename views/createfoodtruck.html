@@ -12,46 +12,74 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <script src="../js/modules/myapp.js"></script>
   <script src="../js/controllers/createfoodtruckctrl.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
   <div ng-app="myApp">
     <div class="container-fluid" ng-controller="createFoodTruckCtrl">
       <h1>Create Food Truck</h1>
+      <p>
+        <label>Name</label>
+        <input type="text" placeholder="text here" ng-model="i_foodTruckName" />
+      </p>
+      <p>
+        <label>Station</label>
+        <select ng-model="i_stationName">
+          <option ng-repeat="stat in stationList">{{stat}}</option>
+        </select>
+      </p>
+      <p>
+        <label>Assigned Staff<label>
+            <select multiple ng-model="selectedStaffArray">
+              <option ng-repeat="emp in empList">{{emp.fullName}}</option>
+            </select>
+      </p>
+      THE LIST: {{empList}}
 
 
-      <!-- big table goes here -->
-      <fieldset>
-        <p>
-          <label>Name</label>
-          <input type="text" placeholder="text here" />
-        </p>
-        <p>
-          <label>Station</label>
-          <select ng-model="stationName">
-            <option ng-repeat="stat in stationList">{{stat}}</option>
-          </select>
-        </p>
-        <p>
-          <label>Assigned Staff<label>
-              <select multiple ng-model="selectedStaff">
-                <option ng-repeat="emp in empList">{{stat}}</option>
-              </select>
-        </p>
 
-        MENUITEMS Food Apple Price so much population fuck
+      <!-- somehow gotta insert fucking menu Item options here WITH BUTTONS -->
 
-        <!-- somehow gotta insert fucking menu Item options here WITH BUTTONS -->
 
-        <div class="row">
-          <button class="btn btn-primary" ng-click="goScreen11()">Back</button>
-          <button class="btn btn-primary" ng-click="BigCreate()">Create</button>
-      </fieldset>
+      <table class="table table-striped table-hover">
+        <tr ng-repeat="food in foodData">
+          <td>Food</td>
+          <td>{{food.foodName}}</td>
+          <td>Price</td>
+          <td>{{food.price}}</td>
+          <td><button type="button" class="btn btn-primary">
+              <i class="fa fa-plus"></i>
+            </button></td>
+          <td><button type="button" class="btn btn-primary" ng-click="removeFood($index)">
+              <i class="fa fa-minus"></i>
+            </button></td>
+        </tr>
+        <tr>
+          <td>Food</td>
+          <td>
+            <select ng-model="i_foodName">
+              <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food) >= 0">{{food.foodName}}</option>
+            </select>
+          </td>
+          <td><input type="number" ng-model="i_price" /></td>
+          <td><button type="button" class="btn btn-primary" ng-click="addFood()">
+              <i class="fa fa-plus"></i>
+            </button></td>
+          <td></td>
+        </tr>
+
+      </table>
+      <div class="alert alert-danger" ng-show="nullMsgFlag">
+        <strong>ERROR:</strong> Select more options!
+      </div>
+
+      <div class="row">
+        <button class="btn btn-primary" ng-click="goScreen11()">Back</button>
+        <button class="btn btn-primary" ng-click="bigCreate()">Create</button>
+      </div>
+      <button ng-click="getDisBitchSumData()">Best Button</button>
     </div>
-
-    {{mytest}}
-    <button ng-click="getDisBitchSumData()">Best Button</button>
-  </div>
 </body>
 
 </html>

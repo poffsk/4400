@@ -14,12 +14,12 @@
 </head>
     <body>
       <div ng-app="myApp">
-        <div class="container-fluid" ng-controller="summarydetailctrl">
+        <div class="container-fluid" ng-controller="summarydetailCtrl">
       <h1>Summary Detail</h1>
 
        <div class="container-fluid">
           <div class="row">
-            <div class="col">Name:    variable name of pre-selected food truck
+            <div class="col">Name: {{foodTruckName}}
             <!--  <input type = "text"
                      id = "myText"
                      value = "text here" ng-model="i_buildingName"/> -->
@@ -29,13 +29,30 @@
 
             </div>
             <div class="row">
-            <button class="btn btn-primary" ng-clicked="goFTS()">Back</button>
+            <button class="btn btn-primary" ng-click="goFTS()">Back</button>
             </div>
           </div>
 
 
-
-          {{mytest}}
+          <form>
+            <table class="table table-striped table-hover">
+              <tr>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Total Purchase</th>
+                <th># Orders</th>
+                <th>Food(s))</th>
+              </tr>
+              <tr ng-repeat="row in tableList">
+                <td>{{cleanDate(row.date)}}</td>
+                <td>{{row.customerName}}</td>
+                <td>{{row.totalPurchase}}</td>
+                <td>{{row.orderCount}}</td>
+                <td>{{row.foodNames}}</td>
+              </tr>
+            </table>
+          </form>
+          {{tableList}}
           <button ng-click="getDisBitchSumData()">Best Button</button>
         </div>
       </div>

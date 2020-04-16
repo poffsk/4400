@@ -91,10 +91,6 @@ myApp.controller("manageFoodCtrl", function($scope) {
       }
   }
 
-
-
-
-
   function handleData(rows) {
     /*var myList = [];
     for (var row of rows) {

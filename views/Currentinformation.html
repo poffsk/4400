@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Bootstrap Example</title>
   <meta charset="utf-8">
@@ -12,51 +13,70 @@
   <script src="../js/modules/myapp.js"></script>
   <script src="../js/controllers/currentinformationctrl.js"></script>
 </head>
-    <body>
-      <div ng-app="myApp">
-        <div class="container-fluid" ng-controller="currentinformationctrl">
-      <h1>Explore</h1>
 
-       <div class="container-fluid">
-          <div class="row">
-            <div class="col">Station</div>
-            <div class="col">Station variable</div>
-      </div>
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="currentinformationCtrl">
+      <h1>Current Information</h1>
+
       <div class="container-fluid">
-         <div class="row">
-           <div class="col">Building</div>
-           <div class="col">Building variable</div>
-     </div>
-     <div class="container-fluid">
+        <div class="row">
+          <div class="col">Station</div>
+          <div class="col">{{tableList.stationName}}</div>
+        </div>
+        <div class="row">
+          <div class="col">Building</div>
+          <div class="col">{{tableList.buildingName}}</div>
+        </div>
         <div class="row">
           <div class="col">Building Tag(s)</div>
-          <div class="col">Building Tag variables</div>
-    </div>
-    <div class="container-fluid">
-       <div class="row">
-         <div class="col">Building Description</div>
-         <div class="col">Building Description variable</div>
-   </div>
-   <div class="container-fluid">
-      <div class="row">
-        <div class="col">Balance</div>
-        <div class="col">Balance variable</div>
-  </div>
-            <!--  <input type = "text"
+          <div class="col">{{tableList.tags}}</div>
+        </div>
+        <div class="row">
+          <div class="col">Building Description</div>
+          <div class="col">{{tableList.description}}</div>
+        </div>
+        <div class="row">
+          <div class="col">Balance</div>
+          <div class="col">{{tableList.balance}}</div>
+        </div>
+      </div>
+      <!--  <input type = "text"
                      id = "myText"
                      value = "text here" ng-model="i_buildingName"/> -->
 
 
-<!-- big ass table here -->
-
-          <div class="row">
-          <button class="btn btn-primary" ng-click="goHome()">Back</button>
-          <button class="btn btn-primary" ng-click="goOrder()">Order</button>
-          </div>
-
-          {{mytest}}
-          <button ng-click="getDisBitchSumData()">Best Button</button>
-        </div>
+      <!-- big ass table here -->
+      <form>
+        <table class="table table-striped table-hover">
+          <tr>
+            <th></th>
+            <th>Food Truck</th>
+            <th>Manager</th>
+            <th>Food(s))</th>
+          </tr>
+          <tr ng-repeat="row in tableResult">
+            <td>
+              <div class="radio">
+                <label class="radio-inline"><input type="radio" ng-model="$parent.selectedRow" value="{{$index}}" ng-value="$index" name="optradio"></label>
+              </div>
+            </td>
+            <td>{{row.foodTruckName}}</td>
+            <td>{{row.managerName}}</td>
+            <td>{{row.foodNames}}</td>
+          </tr>
+        </table>
+      </form>
+{{tableResult}}
+      <div class="row">
+        <button class="btn btn-primary" ng-click="goHome()">Back</button>
+        <button class="btn btn-primary" ng-click="goOrder()">Order</button>
       </div>
-    </body>
+
+      {{tableList}}
+      <button ng-click="getDisBitchSumData()">Best Button</button>
+    </div>
+  </div>
+</body>
+
 </html>

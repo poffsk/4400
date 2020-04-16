@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Bootstrap Example</title>
   <meta charset="utf-8">
@@ -11,52 +12,73 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <script src="../js/modules/myapp.js"></script>
   <script src="../js/controllers/updatefoodtruckctrl.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-    <body>
-      <div ng-app="myApp">
-        <div class="container-fluid" ng-controller="updatefoodtruckctrl">
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="updatefoodtruckCtrl">
       <h1>Update Food Truck</h1>
 
+      <p>
+        <label>Name</label>
+        <input type="text" ng-model="foodTruckName" />
+      </p>
+      <p>
+        <label>Station</label>
+        <select ng-model="i_stationName">
+          <option ng-repeat="stat in stationList">{{stat}}</option>
+        </select>
+      </p>
+      <p>
+        <label>Assigned Staff<label>
+            <div>
+              <select multiple ng-model="selectedStaffArray">
+                <option ng-repeat="emp in empList">{{emp.fullName}}</option>
+              </select>
+            </div>
+      </p>
 
-<!-- big table goes here -->
-<fieldset>
-  <p>
-    <label>Name</label>
-    <input type = "text"
-           id = "myText"
-           value = "text here" />
-  </p>
-  <p>
-    <label>Station</label>
-    <select id="cars">
-<option value="volvo">Volvo</option>
-<option value="saab">Saab</option>
-<option value="mercedes">Mercedes</option>
-<option value="audi">Audi</option>
-</select>
-  </p>
-  <p>
-    <label>Assigned Staff<label>
-    <select id="cars">
-<option value="volvo">Volvo</option>
-<option value="saab">Saab</option>
-<option value="mercedes">Mercedes</option>
-<option value="audi">Audi</option>
-</select>
-  </p>
 
-  MENUITEMS Food Apple Price so much population fuck
+      <table class="table table-striped table-hover">
+        <tr ng-repeat="food in foodData">
+          <td>Food</td>
+          <td>{{food.foodName}}</td>
+          <td>Price</td>
+          <td>{{food.price}}</td>
+          <td><button type="button" class="btn btn-primary">
+              <i class="fa fa-plus"></i>
+            </button></td>
+        </tr>
+        <tr>
+          <td>Food</td>
+          <td>
+            <select ng-model="i_foodName">
+              <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food) >= 0">{{food.foodName}}</option>
+            </select>
+          </td>
+          <td><input type="number" ng-model="i_price" /></td>
+          <td><button type="button" class="btn btn-primary" ng-click="doFoodQuery()">
+              <i class="fa fa-plus"></i>
+            </button></td>
+          <td></td>
+        </tr>
 
-<!-- somehow gotta insert fucking menu Item options here WITH BUTTONS -->
+      </table>
+      <div class="alert alert-danger" ng-show="nullMsgFlag">
+        <strong>ERROR:</strong> Select more options!
+      </div>
 
-          <div class="row">
-          <button class="btn btn-primary">Back</button>
-          <button class="btn btn-primary">Create</button>
-</fieldset>
-          </div>
 
-          {{mytest}}
-          <button ng-click="getDisBitchSumData()">Best Button</button>
-        </div>
-    </body>
+      <div class="row">
+        <button class="btn btn-primary">Back</button>
+        <button class="btn btn-primary">Create</button>
+      </div>
+
+      {{empList}}
+      <button ng-click="getDisBitchSumData()">Best Button</button>
+    </div>
+
+</body>
+
 </html>
