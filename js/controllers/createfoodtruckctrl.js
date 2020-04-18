@@ -8,6 +8,7 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
       $scope.foodData = []
       //[{"foodName":"apples", "price":5.00}, {"foodName":"weefls","price":0.00}];
       $scope.usedFoodList = [];
+      var createCount = 0;
 
       // Drop Down Data
       $scope.doDropdownQuery = function() {
@@ -42,11 +43,9 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
         }
 
         $scope.foodList = foodList;
-        $scope.$apply($scope.foodList);
+        $scope.$apply();
 
         console.log(rows);
-        $scope.mytest = rows;
-        $scope.$apply($scope.mytest);
       }
 
       //multi-select of available employees
@@ -114,15 +113,15 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
 
 
       $scope.addFood = function() {
-        if (!tableHasFoodItem($scope.i_foodName)) {
+        if (!tableHasFoodItem($scope.i_foodName) && $scope.i_price >= 0) {
           var newFoodItem = {
             "foodName": $scope.i_foodName,
             "price": $scope.i_price
           };
           $scope.foodData.push(newFoodItem);
           $scope.usedFoodList.push($scope.i_foodName);
-          $scope.i_foodName = "";
-          $scope.i_price = "";
+  //        $scope.i_foodName = "";
+    //      $scope.i_price = "";
           console.log($scope.usedFoodList);
         }
       }
@@ -164,7 +163,6 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
 
         $scope.doCall19b = function() {
           var staffUsername = "";
-
           for (var staff of $scope.selectedStaffArray) { //need to convert
             staffUsername = filterStaff(staff);
             conn.getRows($scope.doCall19c, 'CALL mn_create_foodTruck_add_staff("' + $scope.i_foodTruckName + '", "' + staffUsername + '")');
@@ -172,17 +170,22 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
         }
 
         $scope.doCall19c = function() {
-          console.log($scope.usedfoodList);
-          for (var food of $scope.usedfoodList) {
+          console.log($scope.usedFoodList);
+          createCount = $scope.foodData.length;
+          for (var food of $scope.foodData) {
             conn.getRows($scope.handleData, 'CALL mn_create_foodTruck_add_menu_item("' + $scope.i_foodTruckName + '", "' + food.price + '", "' + food.foodName + '")')
             //again, what happens when we try to insert multiple rows
           }
         }
 
-        function handleData(rows) {
+        $scope.handleData = function(rows) {
           console.log(rows);
           $scope.mytest = rows;
           $scope.$apply($scope.mytest);
+          createCount--;
+          if (createCount <= 0){
+            window.location.href = 'managefoodtruck.html';
+          }
         }
 
         //end big create

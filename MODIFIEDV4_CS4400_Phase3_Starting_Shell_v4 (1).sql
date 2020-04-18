@@ -425,9 +425,14 @@ DROP PROCEDURE IF EXISTS ad_update_station;
 DELIMITER //
 CREATE PROCEDURE ad_update_station(IN i_stationName VARCHAR(100), IN i_capacity INT, IN i_buildingName VARCHAR(100))
 BEGIN
-
+if (i_capacity is not null) then
     UPDATE Station
-    SET capacity = i_capacity, buildingName = i_buildingName
+    SET capacity = i_capacity
+    WHERE stationName = i_stationName;
+end if;
+
+UPDATE Station
+    SET buildingName = i_buildingName
     WHERE stationName = i_stationName;
 
 END //
@@ -590,9 +595,18 @@ DELIMITER //
 CREATE PROCEDURE mn_create_foodTruck_add_station(IN i_foodTruckName VARCHAR(50), IN i_stationName VARCHAR(50), IN i_managerUsername VARCHAR(50))
 BEGIN
 
-INSERT INTO FoodTruck(foodTruckName, stationName, managerUsername)
-VALUES (i_foodTruckName, i_stationName, i_managerUsername);
 
+    
+    IF (SELECT COUNT(stationName) FROM foodtruck WHERE foodtruck.stationName = i_stationName) < (SELECT capacity FROM station WHERE station.stationName = i_stationName) THEN
+	    INSERT INTO FoodTruck(foodTruckName, stationName, managerUsername)
+	VALUES (i_foodTruckName, i_stationName, i_managerUsername);
+
+
+   -- INSERT INTO FoodTruck(foodTruckName, stationName, managerUsername)
+	-- VALUES (i_foodTruckName, i_stationName, i_managerUsername);
+    -- mn_create_foodTruck_add_station("CaddyShak", "Campanile", "LadyVader1977")
+	END IF;
+    
 END //
 DELIMITER ;
 
@@ -607,6 +621,9 @@ BEGIN
     UPDATE Staff
     SET foodTruckName = i_foodTruckName
     WHERE username = i_staffName;
+
+    
+    -- select * from staff
 
 END //
 DELIMITER ;
@@ -1047,31 +1064,42 @@ DELIMITER //
 CREATE PROCEDURE cus_add_item_to_order(IN i_foodTruckName VARCHAR(55), IN i_foodName VARCHAR(55), IN i_purchaseQuantity INT, IN i_orderId INT)
 BEGIN
 
-	DROP TABLE IF EXISTS added_result;
-    CREATE TABLE added_result(foodTruckName VARCHAR(55), foodName VARCHAR(55), foodPrice DECIMAL(6,2), purchaseQuantity INT, orderId INT, username VARCHAR(55), customerBalance decimal(6,2));
+	-- DROP TABLE IF EXISTS added_result;
+   -- CREATE TABLE added_result(foodTruckName VARCHAR(55), foodName VARCHAR(55), foodPrice DECIMAL(6,2), purchaseQuantity INT, orderId INT, username VARCHAR(55), customerBalance decimal(6,2));
     -- need total price (item price, quantity), balance
     -- -- check if the customer can afford it
     -- -- if so, deduct from balance
     -- -- if not, do nothing
 -- here I am just making a table to keep track of all the variables
-	INSERT INTO added_result(foodTruckName, foodName, foodPrice, purchaseQuantity, orderId, username, customerBalance)
-    VALUES (i_foodTruckName, i_foodName, i_purchaseQuantity, i_orderID,
-    (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID),
-    (SELECT balance FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID),
-    (SELECT price FROM menuitem WHERE menuitem.foodTruckName = i_foodTruckName AND menuitem.foodName = i_foodName));
+	-- INSERT INTO added_result(foodTruckName, foodName, foodPrice, purchaseQuantity, orderId, username, customerBalance)
+   -- VALUES (i_foodTruckName, i_foodName, 
 
 -- select * from add_result
--- select * from orderdetail
+-- select * from orders where customerusername = 'beBatman!'
+-- select * from orderdetail where orderID = 2024
+-- select * from customer where username = 'beBatman!'
+-- call cus_add_item_to_order("CrazyPies", "MargheritaPizza", "1", "2017")
 
-	IF ((SELECT foodPrice FROM added_result)*(SELECT purchaseQuantity FROM added_result)) <= (SELECT customerbalance FROM added_result) THEN
-    INSERT INTO orderdetail(orderID, foodTruckName, foodName, purchaseQuantity)
-    VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
-    UPDATE customer SET balance = balance - ((SELECT foodPrice FROM added_result)*(SELECT purchaseQuantity FROM added_result)) 
-    WHERE customer.username = (SELECT username FROM added_result);
+-- set @cost = (SELECT price FROM menuitem WHERE menuitem.foodTruckName = 'FoodTruckYoureLookingFor' AND menuitem.foodName = 'Nachos')*2;
+	set @custusername = (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID);
+	set @cost = (SELECT price FROM menuitem WHERE menuitem.foodTruckName = i_foodTruckName AND menuitem.foodName = i_foodName)*i_purchaseQuantity;
+    set @oldbalance = (SELECT balance FROM customer WHERE username = @custusername);
+    
+	IF (@cost <= @oldbalance) THEN
+		INSERT INTO orderdetail(orderID, foodTruckName, foodName, purchaseQuantity)
+		VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
+    set @newbalance = @oldbalance - @cost; 
+    
+    update customer set balance = @newbalance where username = @custusername;
+    set @oldbalance = @newbalance;
+    -- (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID);
     END IF;
-
+    
 END //
 DELIMITER ;
+
+-- call cus_add_item_to_order('BurgerBird', 'Pie', 5, 2015)
+-- select * from menuItem where foodtruckName = 'BurgerBird'
 
 -- Query #32: cus_order_history [Screen #19 Customer Order History]
 
