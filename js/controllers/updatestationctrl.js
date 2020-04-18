@@ -1,6 +1,7 @@
 myApp.controller("updateStationCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
+  var buildList = [];
 
   function defineStation() {
     console.log(window.location.href);
@@ -10,55 +11,84 @@ myApp.controller("updateStationCtrl", function($scope) {
     $scope.stationName = search.get("stationName");
   }
 
-// Drop Down Data
+  // Drop Down Data
   $scope.doDropdownQuery = function() {
-    conn.getRows(handleDropData, 'select buildingName from building where buildingName not in (select buildingName from station)')
+    conn.getRows(handleDropData, 'select buildingName from building where buildingName not in (select buildingName from station)', "doDropdownQuery");
   }
+
+  $scope.doDrop2Call = function() {
+    conn.getRows($scope.doDropdownQuery2, 'call ad_view_station ("' + $scope.stationName + '")', "doDrop2Call");
+
+  }
+
+  $scope.doDropdownQuery2 = function() {
+    conn.getRows(handleImportantDropData, 'select capacity, buildingName from ad_view_station_result where stationname = "' + $scope.stationName + '"', "doDropdownQuery2");
+    //  conn.getRows(handleDropData, 'select buildingName from building where buildingName = (select buildingName from station where stationname = "' + $scope.stationName + '")')
+  }
+
 
   function handleDropData(rows) {
     var buildList = [];
     for (var buildingInfo of rows) {
-      buildList.push(buildingInfo.buildingName);
+      if (buildList.indexOf(buildingInfo.buildingName) < 0) {
+        buildList.push(buildingInfo.buildingName);
+      }
     }
 
     $scope.buildList = buildList;
-    $scope.$apply($scope.buildList);
-
     console.log(rows);
-    $scope.mytest = rows;
-    $scope.$apply($scope.mytest);
+    $scope.$apply();
   }
-//end drop down data
 
-$scope.updateStation = function() {
-  conn.getRows($scope.doQuery, 'CALL ad_update_station("' + $scope.stationName + '", "'+$scope.statCapacity +'", "'+$scope.statBuilding + '")')
-}
+
+  function handleImportantDropData(rows) {
+    if ($scope.buildList.indexOf(rows[0].buildingName) < 0) {
+      $scope.buildList.push(rows[0].buildingName);
+    }
+    $scope.statBuilding = rows[0].buildingName;
+    $scope.statCapacity = rows[0].capacity;
+    console.log(rows);
+    $scope.$apply();
+  }
+  //end drop down data
+
+  $scope.updateStation = function() {
+    conn.getRows($scope.doCall, 'CALL ad_update_station("' + $scope.stationName + '", ' + convNull($scope.statCapacity, true) + ', "' + $scope.statBuilding + '")', "updateStation")
+  }
 
 
 
   $scope.doCall = function() {
-    conn.getRows($scope.doQuery, 'CALL ad_view_station("' + $scope.stationName + '")')
+    conn.getRows($scope.doQuery, 'CALL ad_view_station("' + $scope.stationName + '")', "doCall");
   }
 
   $scope.doQuery = function() {
-    conn.getRows(handleData, 'select * from ad_view_station_result')
+    conn.getRows(handleData, 'select * from ad_view_station_result', "doQuery");
   }
 
 
   function handleData(rows) {
-    if(rows != null && rows.length > 0){
-      $scope.statCapacity = rows[0].capacity;
-      $scope.statBuilding = rows[0].buildingName;
-      $scope.$apply($scope.statCapacity);
-      $scope.$apply($scope.statBuilding);
-      $scope.doDropdownQuery()
+    if (rows != null && rows.length > 0) {
+      //    $scope.statCapacity = rows[0].capacity;
+      //  $scope.statBuilding = rows[0].buildingName;
+      $scope.$apply();
+      $scope.doDropdownQuery();
+      $scope.doDropdownQuery2();
     }
   }
 
-
-  $scope.getDisBitchSumData = function() {
-    console.log($scope.i_buildingName);
+  function convNull(valToCheck, addQuotes) {
+    if (typeof valToCheck != "undefined" && valToCheck != null && valToCheck.length > 0) {
+      if (addQuotes) {
+        return '"' + valToCheck + '"';
+      } else {
+        return valToCheck;
+      }
+    } else {
+      return 'null';
+    }
   }
+
 
 
   $scope.goScreen4 = function() {
@@ -68,6 +98,7 @@ $scope.updateStation = function() {
 
   defineStation();
   $scope.doDropdownQuery();
+  $scope.doDrop2Call();
   $scope.doCall();
 
 });

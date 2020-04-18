@@ -31,7 +31,7 @@
               <th>Food Quantity</th>
             </tr>
             <tr ng-repeat="row in tableList">
-              <td>{{row.date}}</td>
+              <td>{{cleanDate(row.date)}}</td>
               <td>{{row.orderID}}</td>
               <td>{{row.orderTotal}}</td>
               <td>{{row.foodNames}}</td>

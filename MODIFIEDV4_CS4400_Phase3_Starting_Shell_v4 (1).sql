@@ -360,6 +360,7 @@ END //
 DELIMITER ;
 
 -- Query #9: ad_update_building [Screen #6 Admin Update Building]
+-- select * from foodtruck
 DROP PROCEDURE IF EXISTS ad_update_building;
 DELIMITER //
 CREATE PROCEDURE ad_update_building(IN i_oldBuildingName VARCHAR(55), IN i_newBuildingName VARCHAR(55), IN i_description TEXT)
@@ -435,7 +436,7 @@ DELIMITER ;
 -- Query #14: ad_filter_food [Screen #9 Admin Manage Food]
 DROP PROCEDURE IF EXISTS ad_filter_food;
 DELIMITER //
-CREATE PROCEDURE ad_filter_food(IN i_foodName VARCHAR(100), IN i_sortedBy ENUM('name', 'menuCount', 'purchaseCount'), IN i_sortDirection ENUM('ASC', 'DESC'))
+CREATE PROCEDURE ad_filter_food(IN i_foodName VARCHAR(100), IN i_sortedBy ENUM('foodName', 'menuCount', 'purchaseCount'), IN i_sortDirection ENUM('ASC', 'DESC'))
 BEGIN
     DROP TABLE IF EXISTS ad_filter_food_result;
     CREATE TABLE ad_filter_food_result(foodName varchar(100), menuCount int, purchaseCount int);
@@ -449,8 +450,8 @@ BEGIN
 		GROUP BY MenuCounts.foodName) as innerTable
     WHERE (i_foodName = '' OR i_foodName is NULL OR foodName = i_foodName)
     ORDER BY
-        CASE WHEN (i_sortedBy = "name" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL)) THEN foodName END ASC,
-        CASE WHEN i_sortedBy = "name" AND i_sortDirection = "DESC" THEN foodName END DESC,
+        CASE WHEN (i_sortedBy = "foodName" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL)) THEN foodName END ASC,
+        CASE WHEN i_sortedBy = "foodName" AND i_sortDirection = "DESC" THEN foodName END DESC,
 		CASE WHEN i_sortedBy = "menuCount" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL) THEN menuCount END ASC,
 		CASE WHEN i_sortedBy = "menuCount" AND i_sortDirection = "DESC" THEN menuCount END DESC,
 		CASE WHEN i_sortedBy = "purchaseCount" AND (i_sortDirection = "ASC" OR i_sortDirection = NULL) THEN purchaseCount END ASC,
@@ -465,11 +466,19 @@ DELIMITER //
 CREATE PROCEDURE ad_delete_food(IN i_foodName VARCHAR(100))
 BEGIN
 
+	DELETE FROM ORDERDETAIL
+    WHERE foodName = i_foodName;
+    
+	DELETE FROM MENUITEM
+    WHERE foodName = i_foodName;
+    
     DELETE FROM Food
     WHERE foodName = i_foodName;
 
 END //
 DELIMITER ;
+
+select * from food
 
 -- Query #16: ad_create_food [Screen #10 Admin Create Food]
 DROP PROCEDURE IF EXISTS ad_create_food;
@@ -490,31 +499,70 @@ CREATE PROCEDURE mn_filter_foodTruck(
     IN i_managerUsername VARCHAR(50),
     IN i_foodTruckName VARCHAR(50),
     IN i_stationName VARCHAR(50),
-    IN i_minStaffCount INT,
-    IN i_maxStaffCount INT,
+	IN i_minStaffCount INT,
+	IN i_maxStaffCount INT,
     IN i_hasRemainingCapacity BOOLEAN)
 BEGIN
 
 	DROP TABLE IF EXISTS mn_filter_foodTruck_result;
      CREATE TABLE mn_filter_foodTruck_result(foodTruckName varchar(100), stationName varchar(100),
-		remainingCapacity int, staffCount int, menuItemCount int)
-SELECT foodTruckName, stationName, capacity, COUNT(DISTINCT username), COUNT(DISTINCT foodName)
-    FROM FoodTruck
-    INNER JOIN STATION
-    ON FoodTruck.stationName = STATION.stationName
-    INNER JOIN STAFF
-    ON FoodTruck.foodTruckName = STAFF.foodTruckName
-    INNER JOIN MenuItem
-    ON FoodTruck.foodTruckName = MenuItem.foodTruckName
-    WHERE
-    (i_managerUsername = managerUsername) AND
-    (i_foodTruckName = foodTruckName OR i_foodTruckName = "") AND
-    (i_stationName = stationName OR i_stationName = "") AND
-    ((i_hasRemainingCapacity = TRUE AND capacity>0) OR (i_hasRemainingCapacity = FALSE))
-    GROUP BY foodTruckName
-    HAVING
-    ((i_minStaffCount IS NULL AND i_maxStaffCount IS NULL) OR (i_minStaffCount IS NULL AND staffCount <= i_maxStaffCount) OR (i_maxStaffCount IS NULL AND i_minStaffCount <= staffCount) OR (staffCount BETWEEN i_minStaffCount AND i_maxStaffCount));
+		remainingCapacity int, staffCount int, menuItemCount int);
 
+
+	DROP TABLE IF EXISTS cols124;
+	CREATE TABLE cols124(foodTruckName VARCHAR(55), stationName VARCHAR(55), staffCount int, managerUsername VARCHAR(55));
+	INSERT INTO cols124
+    select foodtruck.foodTruckName, foodtruck.stationName, count(distinct(staff.username)) as 'Staff(s)', foodtruck.managerUsername
+    from foodtruck
+    left join staff on foodtruck.foodtruckname = staff.foodtruckname
+    group by foodtruck.foodtruckname;
+    
+        
+    DROP TABLE IF EXISTS cols23;
+	CREATE TABLE cols23(stationName VARCHAR(55), remcapacity int);
+	INSERT INTO cols23
+	select station.stationName, (station.capacity - count(foodtruck.foodtruckname)) as 'remaining capacity'
+    from station left join foodtruck on station.stationName = foodtruck.stationName
+    group by station.stationName;
+    
+    
+    
+	DROP TABLE IF EXISTS cols15;
+	CREATE TABLE cols15(foodTruckName VARCHAR(55), menuItemCount int);
+	INSERT INTO cols15
+    select foodtruck.foodTruckName, count(menuitem.foodName)
+    from foodtruck
+    left join menuitem
+    on foodtruck.foodTruckName = menuitem.foodTruckName
+    group by foodtruck.foodTruckName;
+    
+    
+    DROP TABLE IF EXISTS cols1245;
+	CREATE TABLE cols1245(foodTruckName VARCHAR(55), stationName VARCHAR(55), menuItemCount int, staffCount int, managerUsername VARCHAR(55));
+	INSERT INTO cols1245
+    select cols124.foodTruckName, cols124.stationName, cols15.menuItemCount, cols124.staffCount, cols124.managerUsername
+    from cols124
+    left join cols15 on cols124.foodTruckName = cols15.foodTruckName;
+    
+    -- CALL mn_filter_foodTruck("LadyVader1977", null, null, 2, null, false)
+    -- select * from cols1245 where managerUsername = 'LadyVader1977'
+    -- select * from mn_filter_foodTruck_result
+        
+    -- DROP TABLE IF EXISTS cols12345;
+	-- CREATE TABLE cols12345(foodTruckName VARCHAR(55), stationName VARCHAR(55), remainingCapacity int, staffCount int, menuItemCount int);
+	INSERT INTO mn_filter_foodTruck_result
+    select cols1245.foodTruckName, cols1245.stationName, cols23.remcapacity, cols1245.staffCount, cols1245.menuItemCount
+    from cols1245
+    left join cols23 on cols1245.stationName = cols23.stationName
+	WHERE
+    (i_managerUsername = cols1245.managerUsername) 
+    AND
+    (i_foodTruckName IS NULL OR cols1245.foodTruckName LIKE CONCAT('%', i_foodTruckName, '%') ) AND
+   (i_stationName = cols1245.stationName OR i_stationName IS NUll) AND
+   ((i_hasRemainingCapacity = TRUE AND cols23.remcapacity>0) OR (i_hasRemainingCapacity = FALSE))
+   group by cols1245.foodTruckName
+    HAVING
+   ((i_minStaffCount IS NULL AND i_maxStaffCount IS NULL) OR (i_minStaffCount IS NULL AND staffCount <= i_maxStaffCount) OR (i_maxStaffCount IS NULL AND staffCount >= i_minStaffCount) OR (staffCount BETWEEN i_minStaffCount AND i_maxStaffCount));
 END //
 DELIMITER ;
 
@@ -691,19 +739,21 @@ BEGIN
 
 END //
 
+select * from staff
+
 -- Query #22c: mn_update_foodTruck_menu_item [Screen #13 Manager Update Food Truck]
--- This is meant to add a MenuItem to the FoodTruck upon update.
+
 DROP PROCEDURE IF EXISTS mn_update_foodTruck_menu_item;
 DELIMITER //
-CREATE PROCEDURE mn_update_foodTruck_menu_item(IN i_foodTruckName VARCHAR(50), IN i_price DECIMAL(6,2), IN i_foodName VARCHAR(50))
+CREATE PROCEDURE mn_update_foodTruck_menu_item(IN i_foodTruckName VARCHAR(55), IN i_price DECIMAL(6,2), IN i_foodName VARCHAR(55))
 BEGIN
 
-    UPDATE MenuItem
-    SET price = i_price
-    WHERE foodTruckName = i_foodTruckName AND foodName = i_foodName;
+	INSERT INTO MenuItem(price, foodTruckName, foodName)
+	VALUES (i_price, i_foodTruckName, i_foodName);
 
 END //
 DELIMITER ;
+
 
 -- call mn_get_station('tharvin')
 -- select * from mn_get_station_result
@@ -931,40 +981,40 @@ BEGIN
     DROP TABLE IF EXISTS cus_current_information_foodTruck_result;
     CREATE TABLE cus_current_information_foodTruck_result(foodTruckName varchar(100), managerName varchar(100), foodNames text);
 
---  Intermediate_1 joins the food truck table to the customer table having the same station. It then picks the truck name and manager username of the trucks located at the customer's location
+--  Intermediate_4 joins the food truck table to the customer table having the same station. It then picks the truck name and manager username of the trucks located at the customer's location
 
-    DROP TABLE IF EXISTS intermediate_1;
-    CREATE TABLE intermediate_1(foodTruckName varchar(100), managerUsername varchar(55));
-    INSERT INTO intermediate_1 (foodTruckName, managerUsername) (
+    DROP TABLE IF EXISTS intermediate_4;
+    CREATE TABLE intermediate_4(foodTruckName varchar(100), managerUsername varchar(55));
+    INSERT INTO intermediate_4 (foodTruckName, managerUsername) (
         SELECT FoodTruck.foodTruckName, FoodTruck.managerUsername
         FROM FoodTruck 
         INNER JOIN Customer ON FoodTruck.stationName = Customer.stationName
         WHERE Customer.username = i_customerUsername);
 
---  Intermediate_2 stores the manager username and full name for managers managing trucks in Intermediate_1 
+--  Intermediate_5 stores the manager username and full name for managers managing trucks in Intermediate_2 
 
-    DROP TABLE IF EXISTS intermediate_2;
-    CREATE TABLE intermediate_2(managerUsername varchar(55), managerName text);
-    INSERT INTO intermediate_2(managerUsername, managerName) (
+    DROP TABLE IF EXISTS intermediate_5;
+    CREATE TABLE intermediate_5(managerUsername varchar(55), managerName text);
+    INSERT INTO intermediate_5(managerUsername, managerName) (
     SELECT `User`.username, CONCAT(`User`.firstName, ' ', `User`.lastName) AS managerName
-    FROM `User` WHERE `User`.username in (SELECT managerUsername FROM intermediate_1));
+    FROM `User` WHERE `User`.username in (SELECT managerUsername FROM intermediate_4));
 
---  Intermediate_3 stores each of the food trucks in Intermediate_1 along with a list of their food names
+--  Intermediate_6 stores each of the food trucks in Intermediate_4 along with a list of their food names
 
-    DROP TABLE IF EXISTS intermediate_3;
-    CREATE TABLE intermediate_3(foodTruckName varchar(55), foodNames text);
-    INSERT INTO intermediate_3(foodTruckName, foodNames)
+    DROP TABLE IF EXISTS intermediate_6;
+    CREATE TABLE intermediate_6(foodTruckName varchar(55), foodNames text);
+    INSERT INTO intermediate_6(foodTruckName, foodNames)
 	(SELECT MenuItem.foodTruckName, GROUP_CONCAT(DISTINCT(MenuItem.foodName) SEPARATOR ', ') FROM MenuItem
-    WHERE MenuItem.foodTruckName IN (SELECT foodTruckName FROM intermediate_1)
+    WHERE MenuItem.foodTruckName IN (SELECT foodTruckName FROM intermediate_4)
     GROUP BY foodTruckName);
 
 --  Inserting the results by joining the intermediates on their shared columns (manager username & food truck name)
 
     INSERT INTO cus_current_information_foodTruck_result(foodTruckName, managerName, foodNames)
-    SELECT intermediate_1.foodTruckName, managerName, foodNames
-    FROM intermediate_1
-    INNER JOIN intermediate_2 ON intermediate_1.managerUsername = intermediate_2.managerUsername
-    INNER JOIN intermediate_3 ON intermediate_1.foodTruckName = intermediate_3.foodTruckName;
+    SELECT intermediate_4.foodTruckName, managerName, foodNames
+    FROM intermediate_4
+    INNER JOIN intermediate_5 ON intermediate_4.managerUsername = intermediate_5.managerUsername
+    INNER JOIN intermediate_6 ON intermediate_4.foodTruckName = intermediate_6.foodTruckName;
 --
 END //
 DELIMITER ;
@@ -996,32 +1046,28 @@ DROP PROCEDURE IF EXISTS cus_add_item_to_order;
 DELIMITER //
 CREATE PROCEDURE cus_add_item_to_order(IN i_foodTruckName VARCHAR(55), IN i_foodName VARCHAR(55), IN i_purchaseQuantity INT, IN i_orderId INT)
 BEGIN
-DROP TABLE IF EXISTS add_result;
-    CREATE TABLE add_result(foodTruckName VARCHAR(55), foodName VARCHAR(55), foodPrice DECIMAL(6,2), 
-    purchaseQuantity INT, orderId INT, username VARCHAR(55), customerBalance decimal(6,2));
+
+	DROP TABLE IF EXISTS added_result;
+    CREATE TABLE added_result(foodTruckName VARCHAR(55), foodName VARCHAR(55), foodPrice DECIMAL(6,2), purchaseQuantity INT, orderId INT, username VARCHAR(55), customerBalance decimal(6,2));
     -- need total price (item price, quantity), balance
     -- -- check if the customer can afford it
     -- -- if so, deduct from balance
     -- -- if not, do nothing
 -- here I am just making a table to keep track of all the variables
-	INSERT INTO add_result(foodTruckName, foodName, purchaseQuantity, orderId, username, customerBalance, foodPrice)
+	INSERT INTO added_result(foodTruckName, foodName, foodPrice, purchaseQuantity, orderId, username, customerBalance)
     VALUES (i_foodTruckName, i_foodName, i_purchaseQuantity, i_orderID,
-    (SELECT customerUsername FROM orders
-    INNER JOIN customer 
-    ON customer.username = orders.customerUsername WHERE orderID = 1013),
-    (SELECT balance FROM orders
-    INNER JOIN customer 
-    ON customer.username = orders.customerUsername WHERE orderID = i_orderID),
+    (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID),
+    (SELECT balance FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID),
     (SELECT price FROM menuitem WHERE menuitem.foodTruckName = i_foodTruckName AND menuitem.foodName = i_foodName));
 
 -- select * from add_result
 -- select * from orderdetail
 
-	IF ((SELECT foodPrice FROM add_result)*(SELECT purchaseQuantity FROM add_result)) <= (SELECT customerbalance FROM add_result) THEN
+	IF ((SELECT foodPrice FROM added_result)*(SELECT purchaseQuantity FROM added_result)) <= (SELECT customerbalance FROM added_result) THEN
     INSERT INTO orderdetail(orderID, foodTruckName, foodName, purchaseQuantity)
     VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
-    UPDATE customer SET balance = balance - ((SELECT foodPrice FROM add_result)*(SELECT purchaseQuantity FROM add_result)) 
-    WHERE customer.username = (SELECT username FROM add_result);
+    UPDATE customer SET balance = balance - ((SELECT foodPrice FROM added_result)*(SELECT purchaseQuantity FROM added_result)) 
+    WHERE customer.username = (SELECT username FROM added_result);
     END IF;
 
 END //

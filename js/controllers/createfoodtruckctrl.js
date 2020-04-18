@@ -12,6 +12,7 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
       // Drop Down Data
       $scope.doDropdownQuery = function() {
         conn.getRows(handleDropData, 'select stationName from station where capacity > 0');
+        //TO DO: need remaining capacity
       }
 
       function handleDropData(rows) {
@@ -171,7 +172,8 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
         }
 
         $scope.doCall19c = function() {
-          for (var food of $scope.foodList) {
+          console.log($scope.usedfoodList);
+          for (var food of $scope.usedfoodList) {
             conn.getRows($scope.handleData, 'CALL mn_create_foodTruck_add_menu_item("' + $scope.i_foodTruckName + '", "' + food.price + '", "' + food.foodName + '")')
             //again, what happens when we try to insert multiple rows
           }
@@ -187,13 +189,6 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
         $scope.goScreen11 = function() {
           window.location.href = 'managefoodtruck.html';
 
-        }
-
-
-
-
-        $scope.getDisBitchSumData = function() {
-          console.log($scope.i_buildingName);
         }
 
         $scope.doDropdownQuery();

@@ -26,22 +26,16 @@ myApp.controller("currentinformationCtrl", function($scope) {
 
   function handleData(rows) {
     console.log(rows);
-    var tableList = [];
-    for (var allData of rows) {
-      tableList.push(allData);
-      $scope.tableList = rows;
-      $scope.$apply($scope.tableList);
-
-  //    $scope.myList = myList;
-  //    $scope.$apply($scope.myList);
-    }
+    $scope.customerInfo = rows[0];
+    $scope.$apply();
   }
 
   $scope.goOrder = function() {
-    if (typeof $scope.myList[$scope.selectedRow] != "undefined") {
+    console.log($scope.tableResult);
+    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
       console.log($scope.selectedRow);
-      console.log($scope.myList[$scope.selectedRow]);
-      var currRow = $scope.myList[$scope.selectedRow];
+      console.log($scope.tableResult[$scope.selectedRow]);
+      var currRow = $scope.tableResult[$scope.selectedRow];
       window.location.href = 'order.html?foodTruckName=' + currRow.foodTruckName;
       }
   }

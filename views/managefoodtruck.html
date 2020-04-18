@@ -12,6 +12,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <script src="../js/modules/myapp.js"></script>
   <script src="../js/controllers/managefoodtruckctrl.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
   <div ng-app="myApp">
@@ -38,12 +40,10 @@
             <input type="number" id="myText" min=0 ng-model="i_minStaffCount" />
             <input type="number" id="myText" min=0 ng-model="i_maxStaffCount" />
           </div>
-          {{i_managerUsername}}
-          {{i_foodTruckName}}
-          {{i_stationName}}
           {{i_minStaffCount}}
+          {{i_maxStaffCount}}
         </div>
-        <input type="checkbox" id="check1" name="Has Remaining Capacity" ng-model="i_hasRemainingCapacity">
+        <input type="checkbox" name="Has Remaining Capacity" ng-model="i_hasRemainingCapacity" checked="false">
         <label for="check1"> Has Remaining Capacity</label><br>
         <button class="btn btn-primary" ng-click="doProcedure()">Filter</button>
 
@@ -57,7 +57,7 @@
               <th>Staff(s)</th>
               <th>#Menu Item</th>
             </tr>
-            <tr ng-repeat="row in tableResult">
+            <tr ng-repeat="row in tableList">
               <td>
                 <div class="radio">
                   <label class="radio-inline"><input type="radio" ng-model="$parent.selectedRow" value="{{$index}}" ng-value="$index" name="optradio"></label>
@@ -65,19 +65,23 @@
               </td>
               <td>{{row.foodTruckName}}</td>
               <td>{{row.stationName}}</td>
-              <td>{{row.capacity}}</td>
-              <td>{{row.a}}</td>
-              <td>{{row.b}}</td>
+              <td>{{row.remainingCapacity}}</td>
+              <td>{{row.staffCount}}</td>
+              <td>{{row.menuItemCount}}</td>
             </tr>
           </table>
         </form>
         <!-- big ass table here -->
 
         <div class="row">
-          <button class="btn btn-primary" ng-clicked="goHome()">Back</button>
-          <button class="btn btn-primary">Create</button>
-          <button class="btn btn-primary">Update</button>
-          <button class="btn btn-primary">Delete</button>
+          <button class="btn btn-primary" ng-click="goHome()">Back</button>
+          <button class="btn btn-primary" ng-click="goCreateTruck()">Create</button>
+          <button class="btn btn-primary" ng-click="updateTruck()">Update</button>
+          <button class="btn btn-primary" ng-click="deleteTruck()">Delete</button>
+                  <div class="alert alert-danger" ng-show="noStatMsgFlag">
+                    <strong>ERROR:</strong> Select a station to update!
+                  </div>
+
         </div>
 
         {{mytest}}

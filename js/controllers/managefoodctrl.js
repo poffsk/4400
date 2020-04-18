@@ -7,10 +7,7 @@ myApp.controller("manageFoodCtrl", function($scope) {
     console.log($scope.i_buildingName);
   }
 
-  //Drop down
-  $scope.doQuery2 = function() {
-    conn.getRows(handleData2, 'select foodName from food')
-  }
+
 
 
   $scope.goHome = function() {
@@ -59,6 +56,10 @@ myApp.controller("manageFoodCtrl", function($scope) {
     $scope.tableResult = rows;
     $scope.$apply($scope.tableResult);
   }
+  //Drop down
+  $scope.doQuery2 = function() {
+    conn.getRows(handleData2, 'select foodName from food')
+  }
 
   function handleData2(rows) {
     console.log(rows);
@@ -89,6 +90,7 @@ myApp.controller("manageFoodCtrl", function($scope) {
       var currRow = $scope.tableResult[$scope.selectedRow];
       conn.getRows($scope.doQuery2(),'call ad_delete_food("' + currRow.foodName + '")')
       }
+      $scope.doSort('foodName')
   }
 
   function handleData(rows) {

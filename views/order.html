@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Bootstrap Example</title>
   <meta charset="utf-8">
@@ -10,52 +11,60 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
   <script src="../js/modules/myapp.js"></script>
-  <script src="../js/controllers/orderctrol.js"></script>
+  <script src="../js/controllers/orderctrl.js"></script>
 </head>
-    <body>
-      <div ng-app="myApp">
-        <div class="container-fluid" ng-controller="orderctrl">
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="orderCtrl">
       <h1>Order</h1>
 
-       <div class="container-fluid">
+      <div class="container-fluid">
         <div class="row">
-         <div class="col">Food Truck</div>
-         <div class="col">Food Truck Variable</div>
-         </div>
-
-         <!-- huge ass table here -->
-         <form>
-           <table class="table table-striped table-hover">
-             <tr>
-               <th></th>
-               <th>Food</th>
-               <th>Price</th>
-             </tr>
-             <tr ng-repeat="row in tableList">
-               <td>
-                 <div class="radio">
-                   <label><input type="checkbox" value="{{$index}}" ng-value="$index"></label>
-                 </div>
-               </td>
-               <td>{{row.foodName}}</td>
-               <td>{{row.price}}</td>
-             </tr>
-           </table>
-         </form>
-            <div class="row">
-              <div class="col">Date
-                <input type = "date" ng-model = "i_date" />
-              </div>
-            </div>
-
-          <div class="row">
-          <button class="btn btn-primary" ng-click = "backInfo()">Back</button>
-          <button class="btn btn-primary" ng-click = "goSubmit()">Submit</button>
-          </div>
-
-          {{mytest}}
-          <button ng-click="getDisBitchSumData()">Best Button</button>
+          <div class="col">Food Truck</div>
+          <div class="col">{{foodTruckName}}</div>
         </div>
+
+        <!-- huge ass table here -->
+        <form>
+          <table class="table table-striped table-hover">
+            <tr>
+              <th></th>
+              <th>Food</th>
+              <th>Price</th>
+              <th>Purchase Quantity
+              <th>
+            </tr>
+            <tr ng-repeat="row in tableList">
+              <td>
+                <div class="radio">
+                  <label><input type="checkbox" ng-value="false" ng-model="row.selected"></label>
+                </div>
+              </td>
+              <td>{{row.foodName}}</td>
+              <td>{{row.price}}</td>
+              <td><input type="int" ng-model="row.i_purchaseQuantity"></td>
+            </tr>
+          </table>
+          {{tableList}}
+        </form>
+        <div class="row">
+          <div class="col">Date
+            <input type="date" ng-model="i_date" />
+          </div>
+        </div>
+        {{i_date}}
+
+        <div class="row">
+          <button class="btn btn-primary" ng-click="backInfo()">Back</button>
+          <button class="btn btn-primary" ng-click="goSubmit()">Submit</button>
+        </div>
+
+        {{foodTruckName}}
+        {{newDate}}
+        <button ng-click="getDisBitchSumData()">Best Button</button>
       </div>
-    </body>
+    </div>
+</body>
+
 </html>

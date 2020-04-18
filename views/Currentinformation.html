@@ -18,27 +18,26 @@
   <div ng-app="myApp">
     <div class="container-fluid" ng-controller="currentinformationCtrl">
       <h1>Current Information</h1>
-
       <div class="container-fluid">
         <div class="row">
           <div class="col">Station</div>
-          <div class="col">{{tableList.stationName}}</div>
+          <div class="col">{{customerInfo.stationName}}</div>
         </div>
         <div class="row">
           <div class="col">Building</div>
-          <div class="col">{{tableList.buildingName}}</div>
+          <div class="col">{{customerInfo.buildingName}}</div>
         </div>
         <div class="row">
           <div class="col">Building Tag(s)</div>
-          <div class="col">{{tableList.tags}}</div>
+          <div class="col">{{customerInfo.tags}}</div>
         </div>
         <div class="row">
           <div class="col">Building Description</div>
-          <div class="col">{{tableList.description}}</div>
+          <div class="col">{{customerInfo.description}}</div>
         </div>
         <div class="row">
           <div class="col">Balance</div>
-          <div class="col">{{tableList.balance}}</div>
+          <div class="col">{{customerInfo.balance}}</div>
         </div>
       </div>
       <!--  <input type = "text"
@@ -73,7 +72,7 @@
         <button class="btn btn-primary" ng-click="goOrder()">Order</button>
       </div>
 
-      {{tableList}}
+      {{customerInfo}}
       <button ng-click="getDisBitchSumData()">Best Button</button>
     </div>
   </div>

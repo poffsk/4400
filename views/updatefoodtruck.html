@@ -22,7 +22,7 @@
 
       <p>
         <label>Name</label>
-        <input type="text" ng-model="foodTruckName" />
+        <input type="text" ng-model="foodTruckName" disabled/>
       </p>
       <p>
         <label>Station</label>
@@ -39,9 +39,13 @@
             </div>
       </p>
 
+      {{fullUserList}}
+      {{selectedStaffArray}}
+      {{selectedUsernameList}}
+
 
       <table class="table table-striped table-hover">
-        <tr ng-repeat="food in foodData">
+        <tr ng-repeat="food in menuList">
           <td>Food</td>
           <td>{{food.foodName}}</td>
           <td>Price</td>
@@ -54,11 +58,14 @@
           <td>Food</td>
           <td>
             <select ng-model="i_foodName">
-              <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food) >= 0">{{food.foodName}}</option>
+              <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food.foodName) >= 0">{{food.foodName}}</option>
             </select>
           </td>
           <td><input type="number" ng-model="i_price" /></td>
-          <td><button type="button" class="btn btn-primary" ng-click="doFoodQuery()">
+          {{i_foodName}}
+          {{i_price}}
+
+          <td><button type="button" class="btn btn-primary" ng-click="addFood()">
               <i class="fa fa-plus"></i>
             </button></td>
           <td></td>
@@ -66,16 +73,17 @@
 
       </table>
       <div class="alert alert-danger" ng-show="nullMsgFlag">
-        <strong>ERROR:</strong> Select more options!
+        <strong>ERROR:</strong> Select more options/staff!
       </div>
 
 
       <div class="row">
-        <button class="btn btn-primary">Back</button>
-        <button class="btn btn-primary">Create</button>
+        <button class="btn btn-primary" ng-click = "goManageFT()" >Back</button>
+        <button class="btn btn-primary" ng-click = "clearStaffCall()">Update</button>
       </div>
 
       {{empList}}
+      {{usedFoodList}}
       <button ng-click="getDisBitchSumData()">Best Button</button>
     </div>
 
