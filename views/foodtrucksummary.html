@@ -22,7 +22,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col">Food Truck Name (contain)
-            <input type="text" id="myText" placeholder="text here" />
+            <input type="text" ng-model="foodTruckName"/>
           </div>
           <div class="col">Station Name
             <select ng-model="i_stationName">
@@ -38,8 +38,8 @@
 
         <div class="row">
           <div class="col">Date
-            <input type="text" id="myText" ng-model="i_minDate"/>
-            <input type="text" id="myText" ng-model="i_maxDate" />
+            <input type="date" ng-model="i_minDate"/>
+            <input type="date"  ng-model="i_maxDate" />
           </div>
         </div>
 

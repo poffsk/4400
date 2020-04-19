@@ -56,7 +56,7 @@
           <td>Food</td>
           <td>
             <select ng-model="i_foodName">
-              <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food) >= 0">{{food.foodName}}</option>
+              <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food.foodName) >= 0">{{food.foodName}}</option>
             </select>
           </td>
           <td><input type="number" ng-model="i_price" /></td>

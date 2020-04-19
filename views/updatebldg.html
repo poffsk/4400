@@ -25,7 +25,7 @@
       <p>
         <label>Name</label>
         <input ng-model="buildingName" type="text" id="myText" value="text here" />
-        
+
       </p>
       <p>
         <label>Description</label>
@@ -33,6 +33,7 @@
       </p>
       <p>
         <label>Tags</label>
+        {{tagData}}
         <table>
           <tr ng-repeat="tag in tagData">
             <td>{{tag}}</td>

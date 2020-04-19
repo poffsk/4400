@@ -24,6 +24,8 @@ myApp.controller("foodtrucksummaryCtrl", function($scope) {
     }
   }
 
+
+
   $scope.whichTruck = function() {
     var currRow = null;
     if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
@@ -39,16 +41,36 @@ myApp.controller("foodtrucksummaryCtrl", function($scope) {
     }
   }
 
+  $scope.filterminDate = function(i_date) {
+    if (i_date != null) {
+      $scope.newminDate = i_date.toISOString().substring(0, 10);
+      console.log($scope.newDate);
+    } else {
+      $scope.newminDate = null;
+    }
+  }
+
+  $scope.filtermaxDate = function(i_date) {
+    if (i_date != null) {
+      $scope.newmaxDate = i_date.toISOString().substring(0, 10);
+      console.log($scope.newDate);
+    } else {
+      $scope.newmaxDate = null;
+    }
+  }
+
   //how is this different from doCall... I guess doCall is only done when filter button
   $scope.doSort = function(i_sortedBy) {
     $scope.i_sortedBy = i_sortedBy;
+    $scope.filterminDate($scope.i_minDate);
+    $scope.filtermaxDate($scope.i_maxDate);
     conn.getRows($scope.doQuery, 'CALL mn_filter_summary(' + convNull($scope.managerUsername, true) +
       ', ' + convNull($scope.foodTruckName, true) //selected row has foodTruckName
       +
       ', ' + convNull($scope.i_stationName, true) //stationName from drop down
       +
-      ', ' + convNull($scope.i_minDate, true) +
-      ', ' + convNull($scope.i_maxDate, true) +
+      ', ' + convNull($scope.newminDate, true) +
+      ', ' + convNull($scope.newmaxDate, true) +
       ', ' + convNull(i_sortedBy, true) //yeet
       +
       ', "ASC")');
@@ -117,7 +139,7 @@ myApp.controller("foodtrucksummaryCtrl", function($scope) {
 
   function handleData2(rows) {
     console.log(rows);
-    var statList = [];
+    var statList = [""];
     for (var statName of rows) {
       statList.push(statName);
     }

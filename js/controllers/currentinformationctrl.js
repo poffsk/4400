@@ -16,6 +16,7 @@ myApp.controller("currentinformationCtrl", function($scope) {
 
 
   $scope.doCall = function() {
+    console.log('CALL cus_current_information_basic("' + $scope.customerUsername + '")');
     conn.getRows($scope.doQuery, 'CALL cus_current_information_basic("' + $scope.customerUsername + '")')
   }
 

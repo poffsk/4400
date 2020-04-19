@@ -867,12 +867,12 @@ select * from orderIDCost; -- orderID, and the total cost associated with that o
 DROP TABLE IF EXISTS orderIDDateCusFood; -- orderID, the date of the order, the customerUsername, and the foods they ordered. The unique key is orderID. 
 CREATE TABLE orderIDDateCusFood (orderID int, `date` date, customerUsername VARCHAR(55), foods VARCHAR(120));
 insert into orderIDDateCusFood
-select orders.orderID, orders.date, orders.customerUsername, GROUP_CONCAT(foodName SEPARATOR ', ') "foods"
+select orders.orderID, orders.date, orders.customerUsername, GROUP_CONCAT(DISTINCT foodName SEPARATOR ', ') "foods"
 from orderdetail INNER JOIN orders on orders.orderID = orderdetail.orderID 
 WHERE foodTruckName in (SELECT foodTruckName from foodtruck WHERE managerUsername = i_managerUsername and foodTruckName = i_foodTruckName)
 GROUP BY orderID;
 
-select `date`, customerUsername,  GROUP_CONCAT(foods SEPARATOR ', ') "foods", COUNT(orderID) "numOrders" from orderIDDateCusFood GROUP BY customerUsername; #this is all except for total cost.
+select `date`, customerUsername,  GROUP_CONCAT(DISTINCT foods SEPARATOR ', ') "foods", COUNT(orderID) "numOrders" from orderIDDateCusFood GROUP BY customerUsername; #this is all except for total cost.
 
 DROP TABLE IF EXISTS customer_date_cost;
 CREATE TABLE customer_date_cost (netCost DECIMAL(6,2), `date` date, customerUsername VARCHAR(55));
@@ -884,7 +884,7 @@ select * from customer_date_cost;
 DROP TABLE IF EXISTS customer_2;
 CREATE TABLE customer_2 (`date` date, customerUsername VARCHAR(55), foods VARCHAR(120), numOrders int);
 insert into customer_2
-select `date`, customerUsername,  GROUP_CONCAT(distinct foods SEPARATOR ', ') "foods", COUNT(orderID) "numOrders" from orderIDDateCusFood GROUP BY `date`;
+select `date`, customerUsername,  GROUP_CONCAT(DISTINCT foods SEPARATOR ', ') "foods", COUNT(orderID) "numOrders" from orderIDDateCusFood GROUP BY `date`;
 
 INSERT INTO mn_summary_detail_result
 select customer_2.date "Date", customer_2.customerUsername "Customer", customer_date_cost.netCost "Total Purchase", customer_2.numOrders " Orders", customer_2.foods "Food (s)" from customer_2 INNER JOIN customer_date_cost on customer_2.customerUsername = customer_date_cost.CustomerUsername and customer_2.date = customer_date_cost.date ORDER BY customer_date_cost.date desc;
@@ -1052,18 +1052,16 @@ END //
 DELIMITER ;
 
 -- Query #31: cus_add_item_to_order [Screen #18 Customer Order]
--- Adds a quantity of food to an order if and only if a customer's balance can
--- afford the food price x quantity. If successful, make sure to deduct
--- from their balance too.
+-- Adds a quantity of food to an order if and only if a customer's balance can afford the food price x quantity. If successful, make sure to deduct from their balance too.
 
 -- call cus_add_item_to_order('newtrukkkk', 'Pie', 1, 1014)
 -- select * from add_result
 -- select * from customer
 DROP PROCEDURE IF EXISTS cus_add_item_to_order;
 DELIMITER //
-CREATE PROCEDURE cus_add_item_to_order(IN i_foodTruckName VARCHAR(55), IN i_foodName VARCHAR(55), IN i_purchaseQuantity INT, IN i_orderId INT)
+CREATE PROCEDURE cus_add_item_to_order(IN i_foodTruckName VARCHAR(55), IN i_foodName VARCHAR(55), IN i_purchaseQuantity INT, IN i_orderId INT, IN i_orderTotal decimal(6,2))
 BEGIN
-
+    DECLARE newbalance decimal(6, 2);
 	-- DROP TABLE IF EXISTS added_result;
    -- CREATE TABLE added_result(foodTruckName VARCHAR(55), foodName VARCHAR(55), foodPrice DECIMAL(6,2), purchaseQuantity INT, orderId INT, username VARCHAR(55), customerBalance decimal(6,2));
     -- need total price (item price, quantity), balance
@@ -1081,22 +1079,55 @@ BEGIN
 -- call cus_add_item_to_order("CrazyPies", "MargheritaPizza", "1", "2017")
 
 -- set @cost = (SELECT price FROM menuitem WHERE menuitem.foodTruckName = 'FoodTruckYoureLookingFor' AND menuitem.foodName = 'Nachos')*2;
-	set @custusername = (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID);
-	set @cost = (SELECT price FROM menuitem WHERE menuitem.foodTruckName = i_foodTruckName AND menuitem.foodName = i_foodName)*i_purchaseQuantity;
+
+    set @custusername = (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID);
+	-- set @cost = (SELECT price FROM menuitem WHERE menuitem.foodTruckName = i_foodTruckName AND menuitem.foodName = i_foodName)*i_purchaseQuantity;
     set @oldbalance = (SELECT balance FROM customer WHERE username = @custusername);
     
-	IF (@cost <= @oldbalance) THEN
-		INSERT INTO orderdetail(orderID, foodTruckName, foodName, purchaseQuantity)
-		VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
-    set @newbalance = @oldbalance - @cost; 
+	IF (i_orderTotal <= @oldbalance) THEN
+	INSERT INTO orderdetail(orderID, foodTruckName, foodName, purchaseQuantity)
+	VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
     
-    update customer set balance = @newbalance where username = @custusername;
-    set @oldbalance = @newbalance;
-    -- (SELECT customerUsername FROM orders INNER JOIN customer ON customer.username = orders.customerUsername WHERE orderID = i_orderID);
-    END IF;
+	set newbalance = @oldbalance - i_orderTotal;
     
-END //
-DELIMITER ;
+	update customer
+    set balance = newbalance
+    where username = @custusername;
+-- set @oldbalance = @newbalance;
+  END IF;
+  
+  END// 
+  DELIMITER //
+
+/* DROP TABLE IF EXISTS add_result;
+    CREATE TABLE add_result(foodTruckName VARCHAR(55), foodName VARCHAR(55), foodPrice DECIMAL(6,2), 
+    purchaseQuantity INT, orderId INT, username VARCHAR(55), customerBalance decimal(6,2));
+    -- need total price (item price, quantity), balance, check if the customer can afford it, if so, deduct from balance, if not, do nothing
+-- here I am just making a table to keep track of all the variables
+	INSERT INTO add_result(foodTruckName, foodName, purchaseQuantity, orderId, username, customerBalance, foodPrice)
+    VALUES (i_foodTruckName, i_foodName, i_purchaseQuantity, i_orderID,
+    (SELECT customerUsername FROM orders
+    INNER JOIN customer 
+    ON customer.username = orders.customerUsername WHERE orderID = 1013),
+    (SELECT balance FROM orders
+    INNER JOIN customer 
+    ON customer.username = orders.customerUsername WHERE orderID = i_orderID),
+    (SELECT price FROM menuitem WHERE menuitem.foodTruckName = i_foodTruckName AND menuitem.foodName = i_foodName));
+
+-- select * from add_result
+-- select * from orderdetail
+
+	IF ((SELECT foodPrice FROM add_result)*(SELECT purchaseQuantity FROM add_result)) <= (SELECT customerbalance FROM add_result) THEN
+    INSERT INTO orderdetail(orderID, foodTruckName, foodName, purchaseQuantity)
+    VALUES (i_orderID, i_foodTruckName, i_foodName, i_purchaseQuantity);
+    UPDATE customer SET balance = balance - ((SELECT foodPrice FROM add_result)*(SELECT purchaseQuantity FROM add_result)) 
+    WHERE customer.username = (SELECT username FROM add_result);
+    END IF; */
+
+
+
+    
+
 
 -- call cus_add_item_to_order('BurgerBird', 'Pie', 5, 2015)
 -- select * from menuItem where foodtruckName = 'BurgerBird'

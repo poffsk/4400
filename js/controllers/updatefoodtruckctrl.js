@@ -294,10 +294,10 @@ myApp.controller("updatefoodtruckCtrl", function($scope) {
 
   $scope.doCall22b = function(rows) {
     // for (var fullestname of $scope.selectedStaffArray) {
-    username=rows[0].username;
+    username = rows[0].username;
     conn.getRows($scope.handleFinalData, 'CALL mn_update_foodTruck_staff("' + $scope.foodTruckName + '", "' + username + '")')
-      //need to fix selectedUsernameList
-  //  }
+    //need to fix selectedUsernameList
+    //  }
   }
 
 
@@ -308,21 +308,21 @@ myApp.controller("updatefoodtruckCtrl", function($scope) {
 
   function convert2UN() {
     for (var fullestname of $scope.selectedStaffArray) {
-    var firstName = fullestname.split(' ')[0];
-    var lastName = fullestname.split(' ')[1];
-    conn.getRows($scope.doCall22b, 'select username from user where firstName = "' + firstName + '"and lastName = "' + lastName + '"')
+      var firstName = fullestname.split(' ')[0];
+      var lastName = fullestname.split(' ')[1];
+      conn.getRows($scope.doCall22b, 'select username from user where firstName = "' + firstName + '"and lastName = "' + lastName + '"')
+    }
   }
-}
 
 
-// handleData
+  // handleData
   function handleData(rows) {
     console.log(rows);
     var myList = [];
     for (var foodNames of rows) {
       myList.push(foodNames.foodName);
-	$scope.mytest = rows;
-    	$scope.$apply($scope.mytest);
+      $scope.mytest = rows;
+      $scope.$apply($scope.mytest);
     }
   }
 

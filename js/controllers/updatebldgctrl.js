@@ -41,8 +41,10 @@ myApp.controller("updatebldgCtrl", function($scope) {
 
   $scope.updateBuilding = function() {
     // TO DO
+    if ($scope.buildingName != "" && $scope.buildDescr != "" && $scope.tagData.length > 0){
     conn.getRows($scope.doTagCall, 'CALL ad_update_building("' + $scope.buildingNameOld + '", "' + $scope.buildingName + '", "' + $scope.buildDescr + '")');
     $scope.buildingNameOld = $scope.buildingName;
+  }
   }
 
   function dummyFunction() {
@@ -71,7 +73,7 @@ myApp.controller("updatebldgCtrl", function($scope) {
   }
 
   $scope.addTag = function() {
-    if ($scope.tagData.indexOf($scope.newTag) < 0) {
+    if ($scope.tagData.indexOf($scope.newTag) < 0 && $scope.buildingName != "") {
       $scope.tagData.push($scope.newTag);
       //* TO DO
       var query = 'call ad_add_building_tag("' + $scope.buildingName + '", "' + $scope.newTag + '")';
@@ -87,12 +89,14 @@ myApp.controller("updatebldgCtrl", function($scope) {
   }
 
   $scope.removeTag = function(tagVal) {
-    var tagIndex = $scope.tagData.indexOf(tagVal);
-    $scope.tagData.splice(tagIndex, 1);
-    console.log($scope.tagData);
-    var query = 'call ad_remove_building_tag("' + $scope.buildingName + '", "' + tagVal + '")';
-    console.log(query);
-    conn.getRows(null, query);
+    if ($scope.buildingName != "") {
+      var tagIndex = $scope.tagData.indexOf(tagVal);
+      $scope.tagData.splice(tagIndex, 1);
+      console.log($scope.tagData);
+      var query = 'call ad_remove_building_tag("' + $scope.buildingName + '", "' + tagVal + '")';
+      console.log(query);
+      conn.getRows(null, query);
+    }
   }
 
 

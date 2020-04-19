@@ -152,16 +152,16 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
     }
 
 
-    if (typeof $scope.i_minCapacity != "undefined" && $scope.i_minCapacity.length > 0) {
-      minCapacity = '"' + $scope.i_minCapacity + '"';
+    if (typeof $scope.i_minCapacity != "undefined" && $scope.i_minCapacity != "") {
+      minCapacity =  $scope.i_minCapacity ;
     } else {
-      minCapacity = 'null';
+      minCapacity = null;
     }
 
-    if (typeof $scope.i_maxCapacity != "undefined" && $scope.i_maxCapacity.length > 0) {
-      maxCapacity = '"' + $scope.i_maxCapacity + '"';
+    if (typeof $scope.i_maxCapacity != "undefined" && $scope.i_maxCapacity != "") {
+      maxCapacity =  $scope.i_maxCapacity ;
     } else {
-      maxCapacity = 'null';
+      maxCapacity = null;
     }
 
     conn.getRows($scope.doQuery3, 'CALL ad_filter_building_station(' + buildingName + ', ' + buildingTag + ', ' + stationName + ', ' + minCapacity + ', ' + maxCapacity + ')');
@@ -170,6 +170,12 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
   $scope.doQuery3 = function() {
     console.log('select * from ad_filter_building_station_result');
     conn.getRows(handleTableData, 'select * from ad_filter_building_station_result');
+  }
+
+  $scope.cleanDate = function(dateToClean){
+    var dateFormat = require('dateformat');
+    var day=dateFormat(dateToClean, "yyyy-mm-dd");
+    return day;
   }
 
 
