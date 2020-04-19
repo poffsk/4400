@@ -37,11 +37,10 @@
 
         <div class="row">
           <div class="col">Staff Count
-            <input type="number" id="myText" min=0 ng-model="i_minStaffCount" />
+            <input type="number" id="myText" min=0 ng-model="i_minStaffCount" /> -
             <input type="number" id="myText" min=0 ng-model="i_maxStaffCount" />
           </div>
-          {{i_minStaffCount}}
-          {{i_maxStaffCount}}
+
         </div>
         <input type="checkbox" name="Has Remaining Capacity" ng-model="i_hasRemainingCapacity" checked="false">
         <label for="check1"> Has Remaining Capacity</label><br>
@@ -83,22 +82,8 @@
                   </div>
 
         </div>
-
-        {{mytest}}
-        <button ng-click="getDisBitchSumData()">Best Button</button>
       </div>
     </div>
 </body>
 
 </html>
-
-query = select * from ad_filter_building_station_result
-call ad_filter_building_station (i_buildingName, i_buildingTag, i_stationName, i_minCapacity, i_maxCapacity);
-CREATE PROCEDURE ad_filter_building_station(
-IN i_buildingName VARCHAR(50),
-IN i_buildingTag VARCHAR(50),
-IN i_stationName VARCHAR(50),
-IN i_minCapacity INT,
-IN i_maxCapacity INT)
-
-INSERT INTO ad_filter_building_station_result

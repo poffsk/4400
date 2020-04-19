@@ -22,7 +22,7 @@
 
       <p>
         <label>Name</label>
-        <input type="text" ng-model="foodTruckName" disabled/>
+        <input type="text" ng-model="foodTruckName" disabled />
       </p>
       <p>
         <label>Station</label>
@@ -57,7 +57,7 @@
               <option ng-repeat="food in foodList" ng-hide="usedFoodList.indexOf(food.foodName) >= 0">{{food.foodName}}</option>
             </select>
           </td>
-          <td><input type="number" ng-model="i_price" min="0"/></td>
+          <td><input type="number" ng-model="i_price" min="0" /></td>
           <td><button type="button" class="btn btn-primary" ng-click="addFood()">
               <i class="fa fa-plus"></i>
             </button></td>
@@ -71,8 +71,8 @@
 
 
       <div class="row">
-        <button class="btn btn-primary" ng-click = "goManageFT()" >Back</button>
-        <button class="btn btn-primary" ng-click = "clearStaffCall()">Update</button>
+        <button class="btn btn-primary" ng-click="goManageFT()">Back</button>
+        <button class="btn btn-primary" ng-click="clearStaffCall()">Update</button>
       </div>
     </div>
 

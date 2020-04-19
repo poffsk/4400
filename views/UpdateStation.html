@@ -29,12 +29,12 @@
         <div class="row">
           <div class="col">Capacity
             <input ng-model="statCapacity" type="text" id="myText" value="text here" />
-            {{statCapacity}}
+            <!--     {{statCapacity}} -->
           </div>
           <div class="col">Sponsored Building
               <select ng-model="statBuilding">
                 <option ng-repeat="sponsorName in buildList">{{sponsorName}}</option>
-                {{buildList}}
+        <!--   {{buildList}} -->
               </select>
               <!--  <input type = "text"
                        id = "myText"
@@ -46,8 +46,7 @@
           <button class="btn btn-primary" ng-click="updateStation()">Update</button>
         </div>
 
-        <!-- big table goes here -->
-        <button ng-click="getDisBitchSumData()">Best Button</button>
+
       </div>
     </div>
 </body>
