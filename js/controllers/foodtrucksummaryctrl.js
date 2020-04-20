@@ -1,4 +1,5 @@
 const fs = require("fs");
+const errormsg = require("../js/controllers/errormsg.js");
 myApp.controller("foodtrucksummaryCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
@@ -35,10 +36,12 @@ myApp.controller("foodtrucksummaryCtrl", function($scope) {
   }
 
   $scope.goSummary = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.tableResult!= "undefined" && typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
       var currRow = $scope.tableResult[$scope.selectedRow];
+        //// TODO: need to select a truck to view detail
       window.location.href = 'SummaryDetail.html?foodTruckName=' + currRow.foodTruckName;
     }
+    else {errormsg.showErrorMsg("error","Select a truck to View Detail");}
   }
 
   $scope.filterminDate = function(i_date) {

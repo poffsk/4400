@@ -1,4 +1,5 @@
 const fs = require("fs");
+const errormsg = require("../js/controllers/errormsg.js");
 myApp.controller("currentinformationCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
@@ -32,6 +33,7 @@ myApp.controller("currentinformationCtrl", function($scope) {
   }
 
   $scope.goOrder = function() {
+    errormsg.closeErrorMsg();
     console.log($scope.tableResult);
     if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
       console.log($scope.selectedRow);
@@ -39,6 +41,7 @@ myApp.controller("currentinformationCtrl", function($scope) {
       var currRow = $scope.tableResult[$scope.selectedRow];
       window.location.href = 'order.html?foodTruckName=' + currRow.foodTruckName;
       }
+      else {errormsg.showErrorMsg("error","Please select a truck");}
   }
 
 

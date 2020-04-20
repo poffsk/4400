@@ -1,5 +1,6 @@
 myApp.controller("updateStationCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
   var buildList = [];
 
@@ -53,7 +54,13 @@ myApp.controller("updateStationCtrl", function($scope) {
   //end drop down data
 
   $scope.updateStation = function() {
-    conn.getRows($scope.doCall, 'CALL ad_update_station("' + $scope.stationName + '", ' + convNull($scope.statCapacity, true) + ', "' + $scope.statBuilding + '")', "updateStation")
+    //// TODO: need to have a capacity
+    errormsg.closeErrorMsg();
+    if (typeof $scope.statCapacity != "undefined" && $scope.statCapacity > 0) {
+      conn.getRows($scope.doCall, 'CALL ad_update_station("' + $scope.stationName + '", ' + convNull($scope.statCapacity, true) + ', "' + $scope.statBuilding + '")', "updateStation")
+    } else {
+      errormsg.showErrorMsg("error", "Need valid capacity");
+    }
   }
 
 

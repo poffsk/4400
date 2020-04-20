@@ -1,6 +1,7 @@
 const fs = require("fs");
 myApp.controller("orderCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
 
 
@@ -23,10 +24,6 @@ myApp.controller("orderCtrl", function($scope) {
     }
   }
 
-  $scope.doSubmit = function() {
-    //for / if checkbox needed here, need to loop over var
-    conn.getRows($scope.doQuery, 'CALL cus_order_add_item_to_order("' + i_date + '", "' + $scope.username + '")');
-  }
 
   $scope.doQuery = function() {
     conn.getRows(handleTableData, 'select foodName, price from menuItem where foodTruckName = "' + $scope.foodTruckName + '"');
@@ -61,11 +58,15 @@ myApp.controller("orderCtrl", function($scope) {
   }
 
   $scope.goSubmit = function() {
-    $scope.filterDate($scope.i_date);
-    console.log('CALL cus_order("' + $scope.newDate + '", "' + $scope.username + '")')
-    conn.getRows($scope.defineOrderID, 'CALL cus_order("' + $scope.newDate + '", "' + $scope.username + '")');
-  } //first need to call
-  //need help pulling the data from the table... somehow need the foodName and purchase quantity... and orderID
+    errormsg.closeErrorMsg();
+    if (typeof $scope.i_date != "undefined") {
+      //// TODO: need to select a date and/or truck to order from
+      $scope.filterDate($scope.i_date);
+      console.log('CALL cus_order("' + $scope.newDate + '", "' + $scope.username + '")')
+      conn.getRows($scope.defineOrderID, 'CALL cus_order("' + $scope.newDate + '", "' + $scope.username + '")');
+    }
+    else {errormsg.showErrorMsg("error", "Please enter a date");}
+  }
 
   $scope.defineOrderID = function() {
     conn.getRows(getOrderID, 'select max(orderID) as orderID from orders where customerUsername = "' + $scope.username + '"');
@@ -101,7 +102,7 @@ myApp.controller("orderCtrl", function($scope) {
         console.log(totalOrderCost);
       }
     }
-    if ($scope.balance >= totalOrderCost) {
+    if (totalOrderCost > 0 && $scope.balance >= totalOrderCost) {
       for (foodItem of $scope.tableList) {
         console.log(foodItem.selected);
         if (foodItem.selected == true) {
@@ -110,11 +111,15 @@ myApp.controller("orderCtrl", function($scope) {
         }
       }
     }
+    else {errormsg.showErrorMsg("error","I'm sorry, we cannot accept this order")}
   }
 
   // handleData
   function handleOrderData(rows) {
     console.log(rows);
+    errormsg.showErrorMsg("success","Thank you for your order!", 5);
+    $scope.doTableQuery();
+    $scope.defineCusBalance();
   }
 
 

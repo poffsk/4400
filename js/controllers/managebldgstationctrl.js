@@ -1,5 +1,6 @@
 myApp.controller("manageBldgStationCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
   $scope.noStatMsgFlag = false;
   /*$scope.bldgDropDown = rows;
@@ -73,19 +74,18 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
 
 
   $scope.updateStation = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined"){
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
       console.log(currRow.stationName);
       if (currRow.stationName != null && currRow.stationName.length > 0) {
         conn.getRows($scope.doQuery3, 'CALL ad_filter_building_station(' + currRow.stationName + ')');
+        //// TODO: need to select a station to update
         window.location.href = 'updateStation.html?stationName=' + currRow.stationName;
-      } else {
-        $scope.noStatMsgFlag = true;
       }
-
     }
+    else {errormsg.showErrorMsg("error","Need to select a station to update");}
   }
 
   $scope.doQuery3 = function() {
@@ -94,33 +94,39 @@ myApp.controller("manageBldgStationCtrl", function($scope) {
   }
 
   $scope.updateBuilding = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined"){
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
+        //// TODO: need to select a building to update
       window.location.href = 'updatebldg.html?building=' + currRow.buildingName + "&stationName=" + currRow.stationName;
     }
+    else {errormsg.showErrorMsg("error","Need to select a building to update");}
   }
 
   $scope.deleteBuilding = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined"){
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
+        //// TODO: need to select a building to delete
       conn.getRows($scope.doProcedure(),'call ad_delete_building("' + currRow.buildingName + '")')
       }
+      else {errormsg.showErrorMsg("error","Need to select a building to delete");}
   }
 
   function handleNullData(rows){
   }
 
   $scope.deleteStation = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined"){
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
+          //// TODO: need to select a station to delete
       conn.getRows($scope.doProcedure(),'call ad_delete_station("' + currRow.stationName + '")')
       }
+      else {errormsg.showErrorMsg("error","Need to select a station to delete");}
   }
 
   function handleNullData(rows){

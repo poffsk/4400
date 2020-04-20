@@ -142,11 +142,12 @@ myApp.controller("createFoodTruckCtrl", function($scope) {
 
   $scope.bigCreate = function() {
     console.log($scope.truckList)
-    if (($scope.i_foodTruckName != null) && ((!$scope.truckList.includes($scope.i_foodTruckName)) && ($scope.i_stationName != null) && ($scope.selectedStaffArray.length > 0) && ($scope.usedFoodList.length > 0))) {
+    if (($scope.i_foodTruckName != null) && ((!$scope.truckList.includes($scope.i_foodTruckName)) && ($scope.i_stationName != null) && (typeof $scope.selectedStaffArray != "undefined") && ($scope.selectedStaffArray.length > 0) && ($scope.usedFoodList.length > 0))) {
       $scope.nullMsgFlag = false;
       conn.getRows($scope.doCall19b, 'CALL mn_create_foodTruck_add_station("' + $scope.i_foodTruckName + '", "' + $scope.i_stationName + '", "' + $scope.managerUsername + '")')
     } else {
       $scope.nullMsgFlag = true;
+        //// TODO: need to select a truck to update... technically already has an error message
     }
   }
 

@@ -1,6 +1,7 @@
 //const session=require("js/controllers/getsessioninfo");
 const fs=require("fs");
 myApp.controller("exploreCtrl", function($scope) {
+  const errormsg = require("../js/controllers/errormsg.js");
   //console.log(session.getInfo());
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
@@ -99,7 +100,8 @@ myApp.controller("exploreCtrl", function($scope) {
 
 
   $scope.setLocation = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    errormsg.closeErrorMsg();
+    if ($scope.tableResult != "undefined" && typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
@@ -111,9 +113,10 @@ myApp.controller("exploreCtrl", function($scope) {
         if(obj.length > 0){
           username = obj[0].username
         }
-        conn.getRows(handleDataNull, 'call cus_select_location("' + username + '", "' + currRow.stationName + '")');
+          conn.getRows(handleDataNull, 'call cus_select_location("' + username + '", "' + currRow.stationName + '")');
       }
     }
+    else {errormsg.showErrorMsg("error","Need to select a location")}
   }
 
   function handleDataNull(rows) {

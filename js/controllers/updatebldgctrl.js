@@ -1,15 +1,12 @@
 myApp.controller("updatebldgCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
 
   function handleData(rows) {
     console.log(rows);
     $scope.mytest = rows;
     $scope.$apply($scope.mytest);
-  }
-
-  $scope.getDisBitchSumData = function() {
-    console.log($scope.i_buildingName);
   }
 
   function defineBuilding() {
@@ -41,10 +38,12 @@ myApp.controller("updatebldgCtrl", function($scope) {
 
   $scope.updateBuilding = function() {
     // TO DO
-    if ($scope.buildingName != "" && $scope.buildDescr != "" && $scope.tagData.length > 0){
+    if (typeof $scope.buildingName != "undefined" && $scope.buildingName != "" && $scope.buildDescr != "" && $scope.tagData.length > 0){
     conn.getRows($scope.doTagCall, 'CALL ad_update_building("' + $scope.buildingNameOld + '", "' + $scope.buildingName + '", "' + $scope.buildDescr + '")');
     $scope.buildingNameOld = $scope.buildingName;
+        //// TODO: need to have a UNIQUE building name entered and a description and a tag
   }
+  else {errormsg.showErrorMsg("error","Need more information");}
   }
 
   function dummyFunction() {
@@ -73,7 +72,8 @@ myApp.controller("updatebldgCtrl", function($scope) {
   }
 
   $scope.addTag = function() {
-    if ($scope.tagData.indexOf($scope.newTag) < 0 && $scope.buildingName != "") {
+    errormsg.closeErrorMsg();
+    if ($scope.tagData.indexOf($scope.newTag) < 0 && $scope.buildingName != "" && $scope.newTag != "" && typeof $scope.newTag != "undefined") {
       $scope.tagData.push($scope.newTag);
       //* TO DO
       var query = 'call ad_add_building_tag("' + $scope.buildingName + '", "' + $scope.newTag + '")';
@@ -82,13 +82,14 @@ myApp.controller("updatebldgCtrl", function($scope) {
       $scope.newTag = "";
       $scope.dupTagMsgFlag = false;
     } else {
-      $scope.dupTagMsgFlag = true;
+    errormsg.showErrorMsg("error","Need better information");
     }
     console.log($scope.tagData);
 
   }
 
   $scope.removeTag = function(tagVal) {
+    errormsg.closeErrorMsg();
     if ($scope.buildingName != "") {
       var tagIndex = $scope.tagData.indexOf(tagVal);
       $scope.tagData.splice(tagIndex, 1);

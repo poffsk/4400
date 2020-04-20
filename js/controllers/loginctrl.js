@@ -2,6 +2,7 @@ const fs = require("fs");
 
 myApp.controller("loginCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
 
 
@@ -16,11 +17,11 @@ myApp.controller("loginCtrl", function($scope) {
 
   function handleData(rows) {
     //console.log(rows);
-    if (rows != null) {
+    if (rows.length > 0) {
       fs.writeFileSync('usersession.json', JSON.stringify(rows));
-
       window.location.href = 'Home.html';
     }
+    else {errormsg.showErrorMsg("error","No user found in database")}
     $scope.mytest = rows;
     $scope.$apply($scope.mytest);
   }

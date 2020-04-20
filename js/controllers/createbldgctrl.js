@@ -1,5 +1,6 @@
 myApp.controller("createbldgCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
 
   $scope.tagList = [];
@@ -23,8 +24,7 @@ myApp.controller("createbldgCtrl", function($scope) {
       //  conn.getRows(null, query);
       $scope.newTag = "";
       $scope.dupTagMsgFlag = false;
-    } else {
-      $scope.dupTagMsgFlag = true;
+    } else { errormsg.showErrorMsg("error","Need better information");
     }
     console.log($scope.tagList);
 
@@ -63,10 +63,12 @@ myApp.controller("createbldgCtrl", function($scope) {
   }
 
   $scope.createData = function() {
-    if ($scope.i_buildingName != "undefined" && $scope.i_buildingName.length > 0 && $scope.i_description != "undefined" && $scope.i_description.length > 0 && $scope.tagList != "undefined" && $scope.tagList.length > 0) {
+    if (typeof $scope.i_buildingName != "undefined" && $scope.i_buildingName.length > 0 && typeof $scope.i_description != "undefined" && $scope.i_description.length > 0 && typeof $scope.tagList != "undefined" && $scope.tagList.length > 0) {
+    //// TODO: error if duplication building or item not filled
       console.log('CALL ad_create_building("' + $scope.i_buildingName + '", "' + $scope.i_description + '")');
       conn.getRows($scope.addSQLTags, 'CALL ad_create_building("' + $scope.i_buildingName + '", "' + $scope.i_description + '")')
     }
+    else {errormsg.showErrorMsg("error","Need more information");}
   }
 
 

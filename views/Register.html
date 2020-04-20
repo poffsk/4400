@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Bootstrap Example</title>
+  <title>Register</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -12,71 +13,53 @@
   <script src="../js/modules/myapp.js"></script>
   <script src="../js/controllers/registerctrl.js"></script>
 </head>
-    <body>
-      <div ng-app="myApp">
-        <div class="container-fluid" ng-controller="registerCtrl">
-          <h1>Register</h1>
+
+<body>
+  <div ng-app="myApp">
+    <div class="container-fluid" ng-controller="registerCtrl">
+      <h1>Register</h1>
       <div class="container-fluid">
-          <div class="row">
-            <div class="col">Username
-              <input type = "text"
-                     id = "myText"
-                     ng-model = "i_username"/>
-            </div>
-            <div class="col">Email
-              <input type = "text"
-                     id = "myText"
-                     placeholder = "text here"
-                     ng-model = "i_email"/>
-            </div>
+        <div class="row">
+          <div class="col">Username
+            <input type="text" id="myText" ng-model="i_username" />
           </div>
-          <div class="row">
-            <div class="col">First Name
-              <input type = "text"
-                     id = "myText"
-                     placeholder = "text here"
-                     ng-model = "i_firstname"/>
-            </div>
-            <div class="col">Last Name
-              <input type = "text"
-                     id = "myText"
-                     placeholder = "text here"
-                     ng-model = "i_lastname"/>
-            </div>
+          <div class="col">Email
+            <input type="text" id="myText" placeholder="text here" ng-model="i_email" />
           </div>
-          <div class="row">
-            <div class="col">Password
-              <input type = "password"
-                     id = "myText"
-                     placeholder = "secret"
-                     ng-model = "i_password"/>
-            </div>
-            <div class="col">Confirm Password
-              <input type = "password"
-                     id = "myText"
-                     placeholder = "secret"
-                     ng-model = "i_confirmpassword"/>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col">First Name
+            <input type="text" id="myText" placeholder="text here" ng-model="i_firstname" />
           </div>
-          <div class="row">
-            <div class="col">Balance
-              <input type = "text"
-                     id = "myText"
-                     placeholder = "text here"
-                     ng-model = "i_balance"/>
-            </div>
-            <div class="col">
-              <form>
+          <div class="col">Last Name
+            <input type="text" id="myText" placeholder="text here" ng-model="i_lastname" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">Password
+            <input type="password" id="myText" placeholder="secret" ng-model="i_password" />
+          </div>
+          <div class="col">Confirm Password
+            <input type="password" id="myText" placeholder="secret" ng-model="i_confirmpassword" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">Balance
+            <input type="text" id="myText" placeholder="text here" ng-model="i_balance" />
+          </div>
+          <div class="col">
+            <form>
               <div class="radio">
-                <label class="radio-inline"><input type="radio" ng-model="i_type" value = "Admin" name="optradio">Admin</label>
-                <label class="radio-inline"><input type="radio" ng-model="i_type" value = "Manager" name="optradio">Manager</label>
-                <label class="radio-inline"><input type="radio" ng-model="i_type" value = "Staff" name="optradio">Staff</label>
+                <label class="radio-inline"><input type="radio" ng-model="i_type" value="Admin" name="optradio">Admin</label>
+                <label class="radio-inline"><input type="radio" ng-model="i_type" value="Manager" name="optradio">Manager</label>
+                <label class="radio-inline"><input type="radio" ng-model="i_type" value="Staff" name="optradio">Staff</label>
               </div>
             </form>
-            </div>
           </div>
-          <button class="btn btn-primary" ng-click="goLogin()">Back</button>
-          <button class="btn btn-primary" ng-click="muchRegister()">Register</button>
+        </div>
+        <button class="btn btn-primary" ng-click="goLogin()">Back</button>
+        <button class="btn btn-primary" ng-click="muchRegister()">Register</button>
       </div>
-    </body>
+</body>
+
 </html>

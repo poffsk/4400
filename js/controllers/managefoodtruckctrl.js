@@ -1,4 +1,5 @@
 const fs = require("fs");
+const errormsg = require("../js/controllers/errormsg.js");
 myApp.controller("managefoodtruckCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
@@ -112,7 +113,7 @@ myApp.controller("managefoodtruckCtrl", function($scope) {
   }
 
   $scope.updateTruck = function() {
-    if (typeof $scope.tableList[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.selectedRow != "undefined" && typeof $scope.tableList != "undefined" && typeof $scope.tableList[$scope.selectedRow] != "undefined") {
       console.log($scope.selectedRow);
       console.log($scope.tableList[$scope.selectedRow]);
       var currRow = $scope.tableList[$scope.selectedRow];
@@ -120,13 +121,14 @@ myApp.controller("managefoodtruckCtrl", function($scope) {
         window.location.href = 'updatefoodtruck.html?foodTruckName=' + currRow.foodTruckName + '&stationName=' + currRow.stationName;
       } else {
         $scope.noStatMsgFlag = true;
+            //// TODO: need to select a truck to update
       }
-
     }
+    else {errormsg.showErrorMsg("error","Please select a truck to update");}
   }
 
   $scope.deleteTruck = function() {
-    if (typeof $scope.tableList[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.selectedRow != "undefined" && typeof $scope.tableList != "undefined" && typeof $scope.tableList[$scope.selectedRow] != "undefined") {
       console.log($scope.selectedRow);
       console.log($scope.tableList[$scope.selectedRow]);
       var currRow = $scope.tableList[$scope.selectedRow];
@@ -134,8 +136,10 @@ myApp.controller("managefoodtruckCtrl", function($scope) {
         conn.getRows($scope.doProcedure, 'call mn_delete_foodTruck("' + currRow.foodTruckName + '")');
       } else {
         $scope.noStatMsgFlag = true;
+          //// TODO: need to select a truck to delete
       }
     }
+    else {errormsg.showErrorMsg("error","Please select a truck to delete");}
   }
 
 

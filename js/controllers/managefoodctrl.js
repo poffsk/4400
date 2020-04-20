@@ -1,13 +1,7 @@
 myApp.controller("manageFoodCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
+  const errormsg = require("../js/controllers/errormsg.js");
   $scope.mytest = "No data yet!";
-
-
-  $scope.getDisBitchSumData = function() {
-    console.log($scope.i_buildingName);
-  }
-
-
 
 
   $scope.goHome = function() {
@@ -70,10 +64,6 @@ myApp.controller("manageFoodCtrl", function($scope) {
 
     $scope.foodList = myList;
     $scope.$apply($scope.foodList);
-
-    //console.log(rows);
-    $scope.mytest2 = rows;
-    $scope.$apply($scope.mytest2);
   }
 
   //end drop down
@@ -84,12 +74,14 @@ myApp.controller("manageFoodCtrl", function($scope) {
   }
 
   $scope.deleteFood = function() {
-    if (typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
+    if (typeof $scope.tableResult != "undefined" && typeof $scope.selectedRow != "undefined" && typeof $scope.tableResult[$scope.selectedRow] != "undefined") {
       console.log($scope.selectedRow);
       console.log($scope.tableResult[$scope.selectedRow]);
       var currRow = $scope.tableResult[$scope.selectedRow];
       conn.getRows($scope.doQuery2(),'call ad_delete_food("' + currRow.foodName + '")')
       }
+      else {errormsg.showErrorMsg("error","What exactly would you like to delete?");}
+          //// TODO: need to select a food to delete
       $scope.doSort('foodName')
   }
 

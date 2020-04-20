@@ -1,4 +1,5 @@
 const fs = require("fs");
+const errormsg = require("../js/controllers/errormsg.js");
 myApp.controller("updatefoodtruckCtrl", function($scope) {
   const conn = require("../js/controllers/connection.js");
   $scope.mytest = "No data yet!";
@@ -49,9 +50,6 @@ myApp.controller("updatefoodtruckCtrl", function($scope) {
   //    $scope.empList.push(empInfo);
   //    $scope.selectedStaffArray.push(empInfo.fullName);
   //  }
-
-
-
 
   function tableHasFoodItem(foodName) {
     var exists = false;
@@ -161,10 +159,6 @@ myApp.controller("updatefoodtruckCtrl", function($scope) {
 
   // where $scope.doQuery is the callback function
   //stopped here
-
-
-
-
 
   $scope.doMenuCall = function() {
     conn.getRows($scope.doMenuQuery, 'CALL mn_view_foodTruck_menu(' + convNull($scope.foodTruckName, true) + ')')
@@ -280,6 +274,7 @@ myApp.controller("updatefoodtruckCtrl", function($scope) {
   // it's finally time to use the Update button!
 
   $scope.clearStaffCall = function() {
+      //// TODO: need to select a truck to update
     // $scope.fullUserList
     //  for (var staff of empList.fullName) {
     //    staffUsername = filterStaff(staff);

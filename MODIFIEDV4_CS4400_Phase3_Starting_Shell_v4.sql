@@ -288,9 +288,18 @@ DELIMITER //
 CREATE PROCEDURE ad_delete_station(
                 IN i_stationName VARCHAR(50))
 BEGIN
-
-	DELETE FROM Station WHERE stationName = i_stationName;
-
+ -- update foodtruck set stationName = null where stationName = i_stationName
+ -- select * from station
+ -- select * from foodtruck
+ -- delete from menuItem where foodtruckname in (select foodtruckname from foodtruck where stationName = 'Bio Quad')
+ -- select * from menuitem
+ -- select * from orderdetail
+ delete from orderdetail where foodTruckName in (select foodtruckname from foodtruck where stationName = i_stationName);
+ delete from menuitem where foodTruckName in (select foodtruckname from foodtruck where stationName = i_stationName);
+ delete from foodtruck where stationName = i_stationName;
+ DELETE FROM Station WHERE stationName = i_stationName;
+ -- select foodtruckname from foodtruck where stationName = 'Bio Quad'
+ -- delete from foodtruck where stationName = 'Bio Quad'
 END //
 DELIMITER ;
 
@@ -483,7 +492,6 @@ BEGIN
 END //
 DELIMITER ;
 
-select * from food
 
 -- Query #16: ad_create_food [Screen #10 Admin Create Food]
 DROP PROCEDURE IF EXISTS ad_create_food;
