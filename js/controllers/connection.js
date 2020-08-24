@@ -11,7 +11,7 @@ exports.getRows = function(callback, query, queryId) {
     host: 'localhost',
     user: 'root',
     port: '3306',
-    password: 'Helluva2020!',
+    password: 
     database: 'cs4400spring2020'
   });
 
